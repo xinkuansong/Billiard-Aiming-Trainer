@@ -1,0 +1,66 @@
+<!-- pages/practice-snooker/practice-snooker.wxml -->
+<!-- Rebuilt from scratch to ensure clean code -->
+<view class="container two-column-layout">
+
+  <!-- ==================== Left: Game Area ==================== -->
+  <view class="game-area">
+    <canvas type="2d" id="poolTable" class="pool-table"></canvas>
+    <view class="aim-info-panel">
+      <text class="angle-text" wx:if="{{angleInfo}}">{{angleInfo}}</text>
+      <text class="distance-text" wx:if="{{distanceInfo}}">{{distanceInfo}}</text>
+      <text class="guide-text" wx:else>正在自动选择最佳目标...</text>
+    </view>
+  </view>
+  
+  <!-- ==================== Right: Control Area ==================== -->
+  <view class="control-area">
+
+    <!-- Ghost Ball View -->
+    <view class="ghost-ball-view">
+      <canvas type="2d" id="ghostBallCanvas" class="ghost-ball-canvas"></canvas>
+      <text class="ghost-ball-title">假想球击球点</text>
+    </view>
+    
+    <!-- Angle Prediction -->
+    <view class="prediction-area">
+      <input 
+        class="angle-input" 
+        type="digit" 
+        placeholder="输入角度" 
+        bindinput="onAngleInput"
+        value="{{predictedAngle}}"
+        disabled="{{selectedPocketIndex === -1}}"
+      />
+      <button 
+        class="confirm-btn" 
+        bindtap="confirmAngle"
+        disabled="{{!predictedAngle || showResult}}"
+      >
+        确认
+      </button>
+    </view>
+    
+    <!-- Action Buttons -->
+    <view class="action-buttons">
+      <button bindtap="generateNewPosition" class="action-btn new-game">新球位</button>
+      <button bindtap="goBack" class="action-btn back">返回</button>
+    </view>
+    
+    <!-- Practice Stats -->
+    <view class="practice-stats">
+      <view class="stat-row">
+        <text class="stat-label">目标球袋:</text>
+        <text class="stat-value">{{targetPocketName}}</text>
+      </view>
+      <view class="stat-row">
+        <text class="stat-label">总次数:</text>
+        <text class="stat-value">{{stats.total}}</text>
+      </view>
+      <view class="stat-row">
+        <text class="stat-label">成功率:</text>
+        <text class="stat-value">{{successRate}}%</text>
+      </view>
+    </view>
+
+  </view> <!-- End of .control-area -->
+</view> <!-- End of .container --> 

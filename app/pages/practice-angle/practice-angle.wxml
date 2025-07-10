@@ -1,0 +1,51 @@
+<!-- pages/practice-angle/practice-angle.wxml -->
+<!-- Rebuilt from scratch to ensure clean code -->
+<view class="container">
+
+  <canvas type="2d" id="angleCanvas" class="angle-canvas"></canvas>
+
+  <view class="info-panel">
+    <text class="angle-text">{{angleInfo || '请输入角度后点击确认'}}</text>
+  </view>
+
+  <view class="control-panel">
+    <view class="prediction-area">
+      <input 
+        class="angle-input" 
+        type="digit" 
+        placeholder="预测角度" 
+        bindinput="onAngleInput"
+        value="{{predictedAngle}}"
+        disabled="{{showAnswer}}"
+      />
+      <button 
+        class="confirm-btn" 
+        bindtap="showAngleValue"
+        disabled="{{!predictedAngle || showAnswer}}"
+      >
+        确认
+      </button>
+    </view>
+    
+    <view class="button-group">
+      <button bindtap="generateNewAngle">新角度</button>
+      <button bindtap="toggleReference">{{showReference ? '隐藏参考' : '显示参考'}}</button>
+    </view>
+    <view class="button-group">
+      <button bindtap="resetPractice" class="reset-btn">重置统计</button>
+      <button bindtap="goBack">返回首页</button>
+    </view>
+  </view>
+
+  <view class="stats-panel">
+    <view class="stat-item">
+      <text class="stat-label">练习次数</text>
+      <text class="stat-value">{{stats.total}}</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-label">平均误差</text>
+      <text class="stat-value">{{averageErrorDisplay}}</text>
+    </view>
+  </view>
+  
+</view> <!-- End of .container --> 

@@ -1,0 +1,119 @@
+/* 全局和容器 */
+page {
+  background-color: #1a202c; /* 深蓝灰色背景 */
+  color: #e2e8f0;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: #2d3748; /* 深靛蓝 */
+}
+
+.game-area {
+  flex: 7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20rpx;
+}
+
+.pool-table {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+}
+
+/* 右侧控制区 */
+.control-area {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  padding: 20rpx;
+  background-color: #1a202c; /* 更深的背景 */
+  gap: 20rpx; /* 模块间距 */
+  border-left: 1px solid #4a5568;
+}
+
+.panel {
+  background-color: #2d3748;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.panel-header {
+  padding: 12rpx 20rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+  background-color: #4a5568;
+  color: #e2e8f0;
+}
+
+.panel-body {
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.ghost-ball-canvas {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 8rpx;
+}
+
+.aim-view-info {
+  font-size: 24rpx;
+  color: #a0aec0;
+  text-align: center;
+  margin-top: 10rpx;
+}
+
+.instructions text {
+  display: block;
+  font-size: 24rpx;
+  color: #cbd5e0;
+}
+
+/* 底部操作区 */
+.prediction-actions {
+  margin-top: auto; /* 将其推到底部 */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx;
+}
+
+.angle-input {
+  grid-column: 1 / -1; /* 占据整行 */
+  background-color: #4a5568;
+  border: 1px solid #718096;
+  border-radius: 8rpx;
+  padding: 18rpx;
+  color: white;
+  text-align: center;
+  font-size: 32rpx;
+}
+
+.confirm-btn,
+.new-game {
+  padding: 18rpx;
+  font-size: 30rpx;
+  border-radius: 8rpx;
+  border: none;
+}
+
+.confirm-btn {
+  background-color: #48bb78; /* 绿色 */
+  color: white;
+}
+
+.confirm-btn[disabled] {
+  background-color: #4a5568;
+  color: #a0aec0;
+}
+
+.new-game {
+  background-color: #4299e1; /* 蓝色 */
+  color: white;
+} 

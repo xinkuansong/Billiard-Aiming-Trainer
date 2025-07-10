@@ -1,0 +1,74 @@
+<view class="login-container">
+  <view class="header">
+    <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
+    <text class="app-name">台球瞄准训练器</text>
+    <text class="app-desc">提升你的台球技巧</text>
+  </view>
+
+  <view class="login-section" wx:if="{{!hasUserInfo}}">
+    <view class="welcome-text">
+      <text class="title">欢迎使用</text>
+      <text class="subtitle">登录后可以保存您的练习记录和成绩</text>
+    </view>
+    
+    <view class="login-benefits">
+      <view class="benefit-item">
+        <image class="benefit-icon" src="/images/chart.png"></image>
+        <text class="benefit-text">练习数据统计</text>
+      </view>
+      <view class="benefit-item">
+        <image class="benefit-icon" src="/images/trophy.png"></image>
+        <text class="benefit-text">成就系统</text>
+      </view>
+      <view class="benefit-item">
+        <image class="benefit-icon" src="/images/target.png"></image>
+        <text class="benefit-text">个性化设置</text>
+      </view>
+    </view>
+
+    <button 
+      class="login-btn"
+      wx:if="{{canIUseGetUserProfile}}"
+      bindtap="getUserProfile"
+    >
+      微信登录
+    </button>
+    
+    <view class="login-tips">
+      <text>点击登录即表示同意服务条款和隐私政策</text>
+    </view>
+  </view>
+
+  <view class="user-section" wx:if="{{hasUserInfo}}">
+    <view class="user-card">
+      <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+      <view class="user-info">
+        <text class="nickname">{{userInfo.nickName}}</text>
+        <text class="status">已登录</text>
+      </view>
+    </view>
+
+    <view class="action-buttons">
+      <button class="action-btn primary" bindtap="goToStats">
+        <image class="btn-icon" src="/images/stats.png"></image>
+        <text>查看统计</text>
+      </button>
+      
+      <button class="action-btn secondary" bindtap="goToSettings">
+        <image class="btn-icon" src="/images/settings.png"></image>
+        <text>设置</text>
+      </button>
+    </view>
+
+    <button class="logout-btn" bindtap="logout">退出登录</button>
+  </view>
+
+  <view class="quick-actions">
+    <text class="section-title">快速开始</text>
+    <navigator url="/pages/index/index" class="quick-action-item">
+      <image class="action-icon" src="/images/game.png"></image>
+      <text class="action-text">开始练习</text>
+      <text class="action-arrow">></text>
+    </navigator>
+  </view>
+</view> 

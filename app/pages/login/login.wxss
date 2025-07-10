@@ -1,0 +1,289 @@
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  padding: 40rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  text-align: center;
+  padding: 60rpx 0;
+}
+
+.logo {
+  width: 120rpx;
+  height: 120rpx;
+  margin-bottom: 30rpx;
+  border-radius: 60rpx;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20rpx;
+}
+
+.app-name {
+  display: block;
+  font-size: 48rpx;
+  font-weight: bold;
+  margin-bottom: 15rpx;
+  text-shadow: 2rpx 2rpx 8rpx rgba(0, 0, 0, 0.3);
+}
+
+.app-desc {
+  display: block;
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 登录区域 */
+.login-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.welcome-text {
+  text-align: center;
+  margin-bottom: 60rpx;
+}
+
+.welcome-text .title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+
+.welcome-text .subtitle {
+  display: block;
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+}
+
+.login-benefits {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 80rpx;
+  padding: 0 20rpx;
+}
+
+.benefit-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.benefit-icon {
+  width: 60rpx;
+  height: 60rpx;
+  margin-bottom: 20rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 30rpx;
+  padding: 15rpx;
+}
+
+.benefit-text {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.login-btn {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  border: none;
+  border-radius: 50rpx;
+  padding: 25rpx 60rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  margin: 40rpx auto;
+  box-shadow: 0 15rpx 35rpx rgba(76, 175, 80, 0.4);
+  transition: all 0.3s ease;
+}
+
+.login-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 10rpx 25rpx rgba(76, 175, 80, 0.4);
+}
+
+.login-tips {
+  text-align: center;
+  margin-top: 40rpx;
+}
+
+.login-tips text {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* 已登录用户区域 */
+.user-section {
+  flex: 1;
+  padding: 40rpx 0;
+}
+
+.user-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 25rpx;
+  padding: 40rpx;
+  display: flex;
+  align-items: center;
+  margin-bottom: 60rpx;
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+}
+
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  margin-right: 30rpx;
+  border: 3rpx solid rgba(255, 255, 255, 0.3);
+}
+
+.user-info {
+  flex: 1;
+}
+
+.nickname {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.status {
+  display: block;
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 40rpx;
+}
+
+.action-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30rpx 20rpx;
+  border-radius: 20rpx;
+  border: none;
+  font-size: 28rpx;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #2196F3, #1976D2);
+  color: white;
+}
+
+.action-btn.secondary {
+  background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+  color: white;
+}
+
+.action-btn:active {
+  transform: translateY(2rpx);
+}
+
+.btn-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-bottom: 15rpx;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #f44336, #d32f2f);
+  color: white;
+  border: none;
+  border-radius: 25rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+  margin: 0 auto;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:active {
+  transform: translateY(2rpx);
+}
+
+/* 快速操作 */
+.quick-actions {
+  margin-top: 60rpx;
+}
+
+.section-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.quick-action-item {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  display: flex;
+  align-items: center;
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.quick-action-item:active {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(2rpx);
+}
+
+.action-icon {
+  width: 50rpx;
+  height: 50rpx;
+  margin-right: 25rpx;
+}
+
+.action-text {
+  flex: 1;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.action-arrow {
+  font-size: 32rpx;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* 响应式设计 */
+@media screen and (max-width: 480px) {
+  .login-container {
+    padding: 30rpx;
+  }
+  
+  .login-benefits {
+    flex-direction: column;
+    gap: 40rpx;
+    align-items: center;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .action-btn {
+    flex-direction: row;
+    justify-content: center;
+    gap: 20rpx;
+  }
+  
+  .btn-icon {
+    margin-bottom: 0;
+  }
+} 

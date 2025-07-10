@@ -1,0 +1,144 @@
+<view class="settings-container">
+  <!-- 用户信息区域 -->
+  <view class="user-section" wx:if="{{userInfo}}">
+    <image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+    <view class="user-info">
+      <text class="user-name">{{userInfo.nickName}}</text>
+      <text class="user-status">已登录</text>
+    </view>
+  </view>
+
+  <view class="login-prompt" wx:else>
+    <text class="prompt-text">请先登录以保存设置</text>
+    <button class="login-btn" bindtap="goToLogin">立即登录</button>
+  </view>
+
+  <!-- 游戏设置 -->
+  <view class="settings-section">
+    <text class="section-title">游戏设置</text>
+    
+    <view class="setting-item">
+      <view class="setting-label">
+        <text class="label-text">球桌类型</text>
+        <text class="label-desc">选择练习的球桌类型</text>
+      </view>
+      <picker 
+        class="setting-picker"
+        range="{{['斯诺克球桌', '中八球桌']}}"
+        value="{{settings.tableType === 'snooker' ? 0 : 1}}"
+        bindchange="onTableTypeChange"
+      >
+        <view class="picker-content">
+          <text>{{settings.tableType === 'snooker' ? '斯诺克球桌' : '中八球桌'}}</text>
+          <text class="picker-arrow">></text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="setting-item">
+      <view class="setting-label">
+        <text class="label-text">难度等级</text>
+        <text class="label-desc">调整练习难度</text>
+      </view>
+      <picker 
+        class="setting-picker"
+        range="{{['简单', '普通', '困难']}}"
+        value="{{settings.difficulty === 'easy' ? 0 : settings.difficulty === 'normal' ? 1 : 2}}"
+        bindchange="onDifficultyChange"
+      >
+        <view class="picker-content">
+          <text>{{settings.difficulty === 'easy' ? '简单' : settings.difficulty === 'normal' ? '普通' : '困难'}}</text>
+          <text class="picker-arrow">></text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="setting-item">
+      <view class="setting-label">
+        <text class="label-text">音效</text>
+        <text class="label-desc">开启练习音效提示</text>
+      </view>
+      <switch 
+        class="setting-switch"
+        checked="{{settings.soundEnabled}}"
+        bindchange="onSoundToggle"
+        color="#4CAF50"
+      />
+    </view>
+
+    <view class="setting-item">
+      <view class="setting-label">
+        <text class="label-text">震动反馈</text>
+        <text class="label-desc">操作时提供震动反馈</text>
+      </view>
+      <switch 
+        class="setting-switch"
+        checked="{{settings.vibrationEnabled}}"
+        bindchange="onVibrationToggle"
+        color="#4CAF50"
+      />
+    </view>
+
+    <view class="setting-item">
+      <view class="setting-label">
+        <text class="label-text">显示提示</text>
+        <text class="label-desc">显示操作提示和指引</text>
+      </view>
+      <switch 
+        class="setting-switch"
+        checked="{{settings.showHints}}"
+        bindchange="onHintsToggle"
+        color="#4CAF50"
+      />
+    </view>
+
+    <view class="setting-item">
+      <view class="setting-label">
+        <text class="label-text">自动保存</text>
+        <text class="label-desc">自动保存练习记录</text>
+      </view>
+      <switch 
+        class="setting-switch"
+        checked="{{settings.autoSave}}"
+        bindchange="onAutoSaveToggle"
+        color="#4CAF50"
+      />
+    </view>
+  </view>
+
+  <!-- 应用信息 -->
+  <view class="settings-section">
+    <text class="section-title">应用信息</text>
+    
+    <view class="info-item" bindtap="aboutApp">
+      <view class="info-content">
+        <text class="info-text">关于应用</text>
+        <text class="info-desc">版本信息和应用介绍</text>
+      </view>
+      <text class="info-arrow">></text>
+    </view>
+
+    <view class="info-item" bindtap="contactDeveloper">
+      <view class="info-content">
+        <text class="info-text">联系开发者</text>
+        <text class="info-desc">反馈问题和建议</text>
+      </view>
+      <text class="info-arrow">></text>
+    </view>
+  </view>
+
+  <!-- 数据管理 -->
+  <view class="settings-section">
+    <text class="section-title">数据管理</text>
+    
+    <button class="action-btn primary" bindtap="resetSettings">
+      <text>恢复默认设置</text>
+    </button>
+  </view>
+
+  <!-- 版本信息 -->
+  <view class="version-info">
+    <text class="version-text">台球瞄准训练器 v1.0</text>
+    <text class="copyright">© 2024 All Rights Reserved</text>
+  </view>
+</view> 

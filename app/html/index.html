@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台球瞄准训练器</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>台球瞄准训练器</h1>
+            <p>练习台球瞄准技巧，提高进球精度</p>
+        </header>
+        
+        <div class="game-area">
+            <div class="table-container">
+                <canvas id="poolTable" width="800" height="400"></canvas>
+                <div class="controls">
+                    <button id="randomPositions" class="btn btn-primary">随机生成球位</button>
+                    <button id="showAimingLines" class="btn btn-secondary">显示瞄准线和角度</button>
+                    <button id="reset" class="btn btn-tertiary">重置</button>
+                </div>
+            </div>
+            
+            <div class="aim-view-container">
+                <div class="aim-view">
+                    <h3>瞄准视角</h3>
+                    <canvas id="aimView" width="300" height="200"></canvas>
+                    <div class="aim-info">
+                        <p id="angleInfo">点击"显示瞄准线和角度"查看角度信息</p>
+                    </div>
+                </div>
+                
+                <div class="instructions">
+                    <h3>使用说明</h3>
+                    <ul>
+                        <li>点击"随机生成球位"生成新的球位</li>
+                        <li>点击台球桌上的球袋选择进球目标（金色高亮为当前目标）</li>
+                        <li>观察白球和目标球位置，思考击球角度</li>
+                        <li>点击"显示瞄准线和角度"查看正确的击球线和进球线</li>
+                        <li>瞄准视角显示不同角度下的球体重合效果对比</li>
+                        <li>绿色虚线圆圈表示其他可选择的球袋</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="angle-generator">
+            <div class="angle-generator-header">
+                <h3>角度练习生成器</h3>
+                <p>练习识别不同角度的夹角大小</p>
+            </div>
+            
+            <div class="angle-practice-container">
+                <div class="angle-display-container">
+                    <canvas id="angleCanvas" width="500" height="400"></canvas>
+                    <div class="angle-controls">
+                        <div class="angle-controls-row">
+                            <button id="generateRandomAngle" class="btn btn-primary">生成随机角度</button>
+                            <button id="showAngleValue" class="btn btn-secondary">显示角度值</button>
+                            <button id="toggleReference" class="btn btn-reference">显示参考角度</button>
+                            <button id="resetAngle" class="btn btn-tertiary">重置</button>
+                        </div>
+                    </div>
+                    <div class="angle-info">
+                        <p id="currentAngleInfo">点击"生成随机角度"开始练习</p>
+                    </div>
+                </div>
+
+                <div class="angle-reference-table">
+                    <h3>角度对照表</h3>
+                    <p class="ball-info">斯诺克R=26.25mm / 中八R=28.575mm</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>角度(°)</th>
+                                <th>d/R</th>
+                                <th>斯诺克d(mm)</th>
+                                <th>中八d(mm)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>0</td><td>0.00</td><td>0.0</td><td>0.0</td></tr>
+                            <tr><td>5</td><td>0.17</td><td>4.5</td><td>4.9</td></tr>
+                            <tr><td>10</td><td>0.35</td><td>9.2</td><td>10.0</td></tr>
+                            <tr><td>15</td><td>0.52</td><td>13.7</td><td>14.9</td></tr>
+                            <tr><td>20</td><td>0.68</td><td>17.9</td><td>19.4</td></tr>
+                            <tr><td>25</td><td>0.84</td><td>22.1</td><td>24.0</td></tr>
+                            <tr><td>30</td><td>1.00</td><td>26.3</td><td>28.6</td></tr>
+                            <tr><td>35</td><td>1.15</td><td>30.2</td><td>32.9</td></tr>
+                            <tr><td>40</td><td>1.29</td><td>33.9</td><td>36.9</td></tr>
+                            <tr><td>45</td><td>1.41</td><td>37.1</td><td>40.3</td></tr>
+                            <tr><td>50</td><td>1.53</td><td>40.2</td><td>43.7</td></tr>
+                            <tr><td>55</td><td>1.64</td><td>43.1</td><td>46.9</td></tr>
+                            <tr><td>60</td><td>1.73</td><td>45.4</td><td>49.4</td></tr>
+                            <tr><td>65</td><td>1.81</td><td>47.5</td><td>51.7</td></tr>
+                            <tr><td>70</td><td>1.88</td><td>49.4</td><td>53.7</td></tr>
+                            <tr><td>75</td><td>1.93</td><td>50.7</td><td>55.2</td></tr>
+                            <tr><td>80</td><td>1.97</td><td>51.7</td><td>56.3</td></tr>
+                            <tr><td>85</td><td>1.99</td><td>52.2</td><td>56.9</td></tr>
+                            <tr><td>90</td><td>2.00</td><td>52.5</td><td>57.2</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="table-note">注：d为从白球视角看到的两球中心距离，即目标球与假想球圆心的距离</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html> 

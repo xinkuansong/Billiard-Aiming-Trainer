@@ -1,0 +1,56 @@
+<!-- pages/practice-chinese8/practice-chinese8.wxml -->
+<!-- Rebuilt from scratch to match the web version -->
+<view class="container two-column-layout">
+
+  <!-- ==================== Left: Game Area ==================== -->
+  <view class="game-area">
+    <canvas type="2d" id="poolTable" class="pool-table" bindtap="onTableTap"></canvas>
+  </view>
+  
+  <!-- ==================== Right: Control Area ==================== -->
+  <view class="control-area">
+
+    <!-- Aiming View Panel -->
+    <view class="panel">
+      <view class="panel-header">瞄准视角</view>
+      <view class="panel-body">
+        <canvas type="2d" id="ghostBallCanvas" class="ghost-ball-canvas"></canvas>
+        <view class="aim-view-info">
+          目标: {{targetPocketName}} | 点击球袋可切换
+        </view>
+      </view>
+    </view>
+    
+    <!-- Instructions Panel -->
+    <view class="panel">
+      <view class="panel-header">使用说明</view>
+      <view class="panel-body instructions">
+        <text>• 点击"新球位"开始</text>
+        <text>• 程序会自动选择最佳目标袋</text>
+        <text>• 点击高亮的备选球袋可切换目标</text>
+        <text>• 输入你预测的角度并“确认”</text>
+      </view>
+    </view>
+
+    <!-- Prediction & Actions -->
+    <view class="prediction-actions">
+      <input 
+        class="angle-input" 
+        type="digit" 
+        placeholder="输入角度" 
+        bindinput="onAngleInput"
+        value="{{predictedAngle}}"
+        disabled="{{selectedPocketIndex === -1}}"
+      />
+      <button 
+        class="confirm-btn" 
+        bindtap="confirmAngle"
+        disabled="{{!predictedAngle || showResult}}"
+      >
+        确认
+      </button>
+      <button bindtap="generateNewPosition" class="action-btn new-game">新球位</button>
+    </view>
+    
+  </view> <!-- End of .control-area -->
+</view> <!-- End of .container --> 

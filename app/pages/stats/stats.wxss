@@ -1,0 +1,503 @@
+.stats-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  padding: 20rpx;
+}
+
+/* 用户头部 */
+.user-header {
+  display: flex;
+  align-items: center;
+  padding: 40rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 25rpx;
+  margin-bottom: 30rpx;
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+}
+
+.user-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  margin-right: 30rpx;
+  border: 3rpx solid rgba(255, 255, 255, 0.3);
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.user-title {
+  display: block;
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* 标签页导航 */
+.tab-navigation {
+  display: flex;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 25rpx;
+  padding: 8rpx;
+  margin-bottom: 30rpx;
+  backdrop-filter: blur(10rpx);
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx;
+  border-radius: 20rpx;
+  transition: all 0.3s ease;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.tab-item.active {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  box-shadow: 0 8rpx 20rpx rgba(76, 175, 80, 0.3);
+}
+
+/* 标签页内容 */
+.tab-content {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* 统计概览 */
+.stats-overview {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 40rpx;
+}
+
+.stat-card {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20rpx;
+  padding: 30rpx 20rpx;
+  text-align: center;
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-number {
+  display: block;
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+  color: #4CAF50;
+}
+
+.stat-label {
+  display: block;
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 图表区域 */
+.chart-section {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 25rpx;
+  padding: 30rpx;
+  margin-bottom: 40rpx;
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+}
+
+.section-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.chart-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: end;
+  height: 200rpx;
+  padding: 20rpx 0;
+}
+
+.chart-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.chart-bar {
+  width: 30rpx;
+  height: 120rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15rpx;
+  display: flex;
+  align-items: end;
+  overflow: hidden;
+}
+
+.bar-fill {
+  width: 100%;
+  border-radius: 15rpx;
+  transition: height 0.6s ease;
+}
+
+.chart-label {
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.chart-count {
+  font-size: 24rpx;
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+/* 最近练习记录 */
+.recent-practices {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 25rpx;
+  padding: 30rpx;
+  margin-bottom: 40rpx;
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+}
+
+.practice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.practice-item {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 15rpx;
+  padding: 20rpx;
+}
+
+.practice-grade {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  font-weight: bold;
+  margin-right: 20rpx;
+}
+
+.grade-S { background: #4CAF50; }
+.grade-A { background: #8BC34A; }
+.grade-B { background: #FFC107; }
+.grade-C { background: #FF9800; }
+.grade-D { background: #F44336; }
+
+.practice-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5rpx;
+}
+
+.practice-accuracy {
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.practice-error {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.practice-time {
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.6);
+  margin-left: 20rpx;
+}
+
+/* 详细统计 */
+.detailed-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 40rpx;
+}
+
+.stats-section {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 25rpx;
+  padding: 30rpx;
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+}
+
+.distribution-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.distribution-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.distribution-label {
+  width: 200rpx;
+  font-size: 24rpx;
+}
+
+.distribution-bar {
+  flex: 1;
+  height: 20rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10rpx;
+  overflow: hidden;
+}
+
+.distribution-count {
+  width: 80rpx;
+  text-align: right;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+/* 建议 */
+.suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 15rpx;
+  padding: 20rpx;
+  gap: 20rpx;
+}
+
+.suggestion-icon {
+  font-size: 32rpx;
+}
+
+.suggestion-text {
+  flex: 1;
+  font-size: 26rpx;
+  line-height: 1.5;
+}
+
+/* 成就系统 */
+.achievements-section {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 25rpx;
+  padding: 30rpx;
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+}
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280rpx, 1fr));
+  gap: 20rpx;
+}
+
+.achievement-item {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 2rpx solid transparent;
+}
+
+.achievement-item.unlocked {
+  background: rgba(76, 175, 80, 0.2);
+  border-color: #4CAF50;
+}
+
+.achievement-item.locked {
+  opacity: 0.5;
+}
+
+.achievement-icon {
+  display: block;
+  font-size: 48rpx;
+  margin-bottom: 15rpx;
+}
+
+.achievement-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.achievement-desc {
+  display: block;
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 15rpx;
+}
+
+.achievement-status {
+  padding: 10rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 20rpx;
+}
+
+.achievement-status:not(.locked) {
+  background: rgba(76, 175, 80, 0.3);
+}
+
+.achievement-status.locked {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.status-text {
+  display: block;
+  font-weight: bold;
+}
+
+.unlock-date {
+  display: block;
+  font-size: 18rpx;
+  margin-top: 5rpx;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* 底部操作 */
+.bottom-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 60rpx;
+  margin-bottom: 40rpx;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 25rpx 20rpx;
+  border-radius: 25rpx;
+  border: none;
+  font-size: 26rpx;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #2196F3, #1976D2);
+  color: white;
+}
+
+.action-btn.secondary {
+  background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+  color: white;
+}
+
+.action-btn.danger {
+  background: linear-gradient(135deg, #f44336, #d32f2f);
+  color: white;
+}
+
+.action-btn:active {
+  transform: translateY(2rpx);
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 100rpx 40rpx;
+}
+
+.empty-icon {
+  width: 120rpx;
+  height: 120rpx;
+  margin-bottom: 40rpx;
+  opacity: 0.6;
+}
+
+.empty-title {
+  display: block;
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+
+.empty-desc {
+  display: block;
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 60rpx;
+  line-height: 1.5;
+}
+
+.start-practice-btn {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  border-radius: 30rpx;
+  padding: 25rpx 50rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  display: inline-block;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 响应式设计 */
+@media screen and (max-width: 768px) {
+  .stats-overview {
+    flex-direction: column;
+  }
+  
+  .bottom-actions {
+    flex-direction: column;
+  }
+  
+  .achievements-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .stats-container {
+    padding: 15rpx;
+  }
+  
+  .chart-container {
+    height: 150rpx;
+  }
+  
+  .distribution-item {
+    flex-wrap: wrap;
+    gap: 10rpx;
+  }
+  
+  .distribution-label {
+    width: 100%;
+  }
+} 
