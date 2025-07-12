@@ -1106,7 +1106,208 @@ _**User**_
 
 _**Assistant**_
 
+<think><details><summary>Thought Process</summary>用户反映在手机界面下，角度训练的角度预测区域不能自动调整宽度。这是一个响应式设计的问题。我需要检查CSS中的媒体查询，特别是针对角度训练区域的响应式设计。
 
+从之前的代码看，角度训练区域是在 `.angle-practice-container` 下的 `.angle-generator-input` 部分。我需要检查这个区域在移动设备上的CSS设置，确保它能够自动调整宽度。
+
+让我先检查当前的响应式CSS设置。</details></think>
+
+---
+
+我需要查看当前的响应式CSS设置，特别是针对角度训练区域的移动端适配。让我检查一下相关的CSS代码：
+
+---
+
+Read file: styles.css
+
+---
+
+<think><details><summary>Thought Process</summary>我看到了问题。在移动端的CSS设置中，角度训练区域的预测区域（`.angle-generator-input`）确实有一些响应式设置，但可能不够完整。我需要确保：
+
+1. 角度预测区域在移动端能够自动调整宽度
+2. 角度训练区域的整体布局在移动端能够正确显示
+
+让我检查一下当前的响应式设置，特别是768px以下的媒体查询。从代码看，已经有一些设置，但可能需要补充或优化。
+
+我需要添加或修改CSS来确保角度预测区域在移动端能够自动调整宽度。</details></think>
+
+---
+
+我发现了问题。在移动端，角度训练区域的预测区域确实需要更好的响应式设置。让我来修复这个问题：
+
+---
+
+
+
+---
+
+<think><details><summary>Thought Process</summary>我还需要检查一下角度训练区域的整体布局设置，确保在移动端时，角度预测区域能够正确占用可用的空间。让我再添加一些CSS规则来进一步优化移动端的显示效果。</details></think>
+
+---
+
+让我再添加一些CSS规则来进一步优化移动端的角度训练区域显示：
+
+---
+
+
+
+---
+
+<think><details><summary>Thought Process</summary>看起来有重复的CSS规则。让我分别处理这两个地方。我需要检查具体的位置来确保修改正确的地方。</details></think>
+
+---
+
+让我检查一下具体的CSS规则位置：
+
+---
+
+Read file: styles.css
+
+---
+
+<think><details><summary>Thought Process</summary>现在我看到了具体的位置。在768px以下的媒体查询中，我需要更新那些角度训练区域的CSS规则。我可以看到从746行开始的规则：
+
+```
+    .angle-practice-top {
+        flex-direction: column;
+    }
+    
+    .angle-practice-bottom {
+        flex-direction: column;
+    }
+
+    .angle-display-area {
+        flex-direction: column;
+    }
+```
+
+我需要更新这些规则来确保在移动端时角度预测区域能够自动调整宽度。</details></think>
+
+---
+
+现在我来更新移动端的角度训练区域CSS规则：
+
+---
+
+
+
+---
+
+<think><details><summary>Thought Process</summary>让我尝试更精确地找到第一个出现的位置（1024px媒体查询中的那一个），然后分别修改两个地方。</details></think>
+
+---
+
+让我分别修改两个地方。首先修改1024px媒体查询中的：
+
+---
+
+
+
+---
+
+<think><details><summary>Thought Process</summary>现在我需要修改768px媒体查询中的对应规则。我需要确保768px媒体查询中的角度训练区域规则也得到更新。</details></think>
+
+---
+
+现在修改768px媒体查询中的角度训练区域规则：
+
+---
+
+
+
+---
+
+<think><details><summary>Thought Process</summary>我还需要添加一些额外的CSS规则来确保角度生成器在移动端能够正确显示。特别是要确保角度生成器本身的容器也能够正确适应移动端。</details></think>
+
+---
+
+让我再添加一些CSS规则来确保角度生成器容器在移动端也能正确显示：
+
+---
+
+
+
+---
+
+<think><details><summary>Thought Process</summary>现在让我重新启动服务器来测试修改的效果。</details></think>
+
+---
+
+现在让我重新启动服务器来测试修改效果：
+
+---
+
+```bash
+pkill -f "start_server.py"
+```
+
+```
+(base) song@DESKTOP-KM64819:~/projects/15.ball$ pkill -f "start_server.py"
+(base) song@DESKTOP-KM64819:~/projects/15.ball$
+```
+
+---
+
+<think><details><summary>Thought Process</summary>现在启动服务器：</details></think>
+
+---
+
+```bash
+python3 start_server.py
+```
+
+---
+
+<think><details><summary>Thought Process</summary>服务器已经在后台运行。让我总结一下我为解决手机界面下角度训练区域宽度问题所做的修改。</details></think>
+
+---
+
+完成了移动端响应式修改！
+
+## 🔧 修改总结
+
+针对手机界面下角度训练的角度预测区域不能自动调整宽度的问题，我进行了以下修改：
+
+### 1. ✅ **角度预测区域响应式优化**
+- 为 `.angle-generator-input` 添加了完整的宽度控制：
+  - `width: 100%` - 占满可用宽度
+  - `max-width: 100%` - 防止溢出
+  - `min-width: 0` - 允许缩小
+  - `box-sizing: border-box` - 包含内边距计算
+
+### 2. ✅ **输入组件响应式优化**
+- 为 `.angle-generator-input .angle-input-group` 添加 `width: 100%`
+- 为 `.angle-generator-input .angle-input` 添加 `max-width: 100%` 和 `box-sizing: border-box`
+- 为 `.angle-generator-input .stats-grid` 添加 `width: 100%`
+- 为 `.angle-generator-input .training-stats` 添加宽度控制
+
+### 3. ✅ **布局容器响应式优化**
+- 为 `.angle-practice-top` 添加：
+  - `width: 100%` - 占满宽度
+  - `align-items: stretch` - 子元素拉伸填充
+- 为 `.angle-practice-bottom` 添加 `width: 100%`
+- 为 `.angle-display-area` 添加：
+  - `width: 100%` - 占满宽度
+  - `align-items: stretch` - 子元素拉伸填充
+  - `gap: 15px` - 子元素间距
+- 为 `.angle-display-container` 添加宽度控制
+
+### 4. ✅ **整体容器响应式优化**
+- 为 `.angle-generator` 添加完整的宽度控制
+- 为 `.angle-practice-container` 添加宽度控制
+
+### 5. ✅ **媒体查询优化**
+- 在 `@media (max-width: 1024px)` 中添加平板端优化
+- 在 `@media (max-width: 768px)` 中添加移动端优化
+
+## 🎯 解决的问题
+
+- **宽度自适应**: 角度预测区域现在能够自动调整宽度适应不同屏幕尺寸
+- **布局对齐**: 在移动端，角度训练区域的各个组件能够正确对齐
+- **内容显示**: 防止内容在小屏幕上溢出或显示不全
+- **用户体验**: 提供更好的移动端交互体验
+
+服务器已经在后台运行，您可以通过访问 `http://localhost:8006` 用电脑浏览器的开发者工具模拟移动设备，或者直接用手机访问来测试移动端的响应式效果！
 
 ---
 
