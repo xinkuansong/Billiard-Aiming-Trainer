@@ -608,14 +608,26 @@ header p {
 @media (max-width: 1024px) {
     .angle-practice-top {
         flex-direction: column;
+        width: 100%;
+        align-items: stretch;
     }
     
     .angle-practice-bottom {
         flex-direction: column;
+        width: 100%;
     }
 
     .angle-display-area {
         flex-direction: column;
+        width: 100%;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .angle-display-container {
+        width: 100%;
+        max-width: 100%;
+        align-items: center;
     }
 
     .angle-reference-table,
@@ -709,6 +721,14 @@ header p {
     .angle-generator {
         padding: 20px;
         margin-top: 20px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .angle-practice-container {
+        width: 100%;
+        max-width: 100%;
     }
 
     .angle-info {
@@ -719,33 +739,58 @@ header p {
     .angle-generator-input {
         padding: 15px;
         margin-top: 15px;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
     }
 
     .angle-generator-input .angle-input-group {
         flex-direction: column;
         gap: 8px;
         align-items: stretch;
+        width: 100%;
     }
 
     .angle-generator-input .angle-input {
         width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
     .angle-generator-input .stats-grid {
         grid-template-columns: 1fr;
         gap: 8px;
+        width: 100%;
+    }
+
+    .angle-generator-input .training-stats {
+        width: 100%;
+        max-width: 100%;
     }
 
     .angle-practice-top {
         flex-direction: column;
+        width: 100%;
+        align-items: stretch;
     }
     
     .angle-practice-bottom {
         flex-direction: column;
+        width: 100%;
     }
 
     .angle-display-area {
         flex-direction: column;
+        width: 100%;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .angle-display-container {
+        width: 100%;
+        max-width: 100%;
+        align-items: center;
     }
 
     #sineCurve {

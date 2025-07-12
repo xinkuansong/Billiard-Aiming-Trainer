@@ -28,7 +28,7 @@ def get_ip():
         return "127.0.0.1"
 
 # 设置服务器参数
-PORT = 8008
+PORT = 8009
 Handler = http.server.SimpleHTTPRequestHandler
 
 # 获取本机IP
