@@ -743,6 +743,8 @@ header p {
         max-width: 100%;
         min-width: 0;
         box-sizing: border-box;
+        align-self: stretch !important;
+        flex: 1;
     }
 
     .angle-generator-input .angle-input-group {
@@ -857,6 +859,30 @@ header p {
     input[type="number"],
     textarea {
         font-size: 16px;
+    }
+
+    /* 角度预测区域移动端修复 */
+    .angle-generator-input {
+        align-self: stretch !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 1 !important;
+        margin: 10px 0 !important;
+        padding: 10px !important;
+    }
+
+    .angle-generator-input .angle-input-group {
+        width: 100% !important;
+        flex-direction: column !important;
+    }
+
+    .angle-generator-input .angle-input {
+        width: 100% !important;
+        margin: 5px 0 !important;
+    }
+
+    .angle-generator-input .training-stats {
+        width: 100% !important;
     }
 }
 
