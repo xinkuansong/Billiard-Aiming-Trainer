@@ -35,13 +35,52 @@ class PoolTrainer {
         
         // 显示状态
         this.showAimingLines = false;
+        this.showAngleInfo = false;
+        
+        // 训练类型和统计
+        this.currentTrainingType = 'random';
+        this.trainingStats = {
+            practiceCount: 0,
+            correctCount: 0,
+            totalError: 0,
+            errors: []
+        };
+        
+        // 训练类型配置
+        this.trainingTypes = {
+            'random': { name: '随机模式', distance: [50, 300], angle: [0, 90] },
+            'near-straight': { name: '近台直球', distance: [50, 120], angle: [0, 15] },
+            'near-small': { name: '近台小角度', distance: [50, 120], angle: [15, 45] },
+            'mid-straight': { name: '中台直球', distance: [120, 200], angle: [0, 15] },
+            'mid-small': { name: '中台小角度', distance: [120, 200], angle: [15, 45] },
+            'far-straight': { name: '远台直球', distance: [200, 300], angle: [0, 15] },
+            'far-small': { name: '远台小角度', distance: [200, 300], angle: [15, 45] },
+            'near-medium': { name: '近台中角度', distance: [50, 120], angle: [45, 75] },
+            'mid-medium': { name: '中台中角度', distance: [120, 200], angle: [45, 75] },
+            'far-medium': { name: '远台中角度', distance: [200, 300], angle: [45, 75] },
+            'near-large': { name: '近台大角度', distance: [50, 120], angle: [75, 90] },
+            'mid-large': { name: '中台大角度', distance: [120, 200], angle: [75, 90] },
+            'far-large': { name: '远台大角度', distance: [200, 300], angle: [75, 90] },
+            'middle-pocket': { name: '中袋专项', distance: [50, 300], angle: [0, 90], pocketType: 'middle' },
+            'corner-pocket': { name: '角袋专项', distance: [50, 300], angle: [0, 90], pocketType: 'corner' }
+        };
         
         // 角度生成器相关
         this.angleCanvas = document.getElementById('angleCanvas');
         this.angleCtx = this.angleCanvas.getContext('2d');
+        this.sineCurveCanvas = document.getElementById('sineCurve');
+        this.sineCurveCtx = this.sineCurveCanvas.getContext('2d');
         this.randomAngle = 0;
         this.showAngleValue = false;
         this.showReferenceAngles = false;
+        
+        // 角度生成器统计
+        this.angleGenStats = {
+            practiceCount: 0,
+            correctCount: 0,
+            totalError: 0,
+            errors: []
+        };
         
         this.init();
     }
@@ -57,6 +96,7 @@ class PoolTrainer {
         document.getElementById('randomPositions').addEventListener('click', () => {
             this.generateRandomPositions();
             this.showAimingLines = false;
+            this.showAngleInfo = false;
             this.updateStats();
         });
         
@@ -67,8 +107,16 @@ class PoolTrainer {
             this.updateStats();
         });
         
+        document.getElementById('showAngleInfo').addEventListener('click', () => {
+            this.showAngleInfo = !this.showAngleInfo;
+            this.drawTable();
+            this.drawAimView();
+            this.updateStats();
+        });
+        
         document.getElementById('reset').addEventListener('click', () => {
             this.showAimingLines = false;
+            this.showAngleInfo = false;
             this.generateRandomPositions();
             this.updateStats();
         });
@@ -94,25 +142,93 @@ class PoolTrainer {
         document.getElementById('toggleReference').addEventListener('click', () => {
             this.toggleReferenceAngles();
         });
+        
+        // 训练类型选择
+        document.getElementById('trainingType').addEventListener('change', (e) => {
+            this.currentTrainingType = e.target.value;
+            this.updateTrainingTypeDisplay();
+        });
+        
+        // 角度输入和统计
+        document.getElementById('submitAngle').addEventListener('click', () => {
+            this.submitAnglePrediction();
+        });
+        
+        document.getElementById('predictedAngle').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                this.submitAnglePrediction();
+            }
+        });
+        
+        document.getElementById('resetStats').addEventListener('click', () => {
+            this.resetTrainingStats();
+        });
+        
+        // 角度生成器的角度输入和统计
+        document.getElementById('submitAngleGen').addEventListener('click', () => {
+            this.submitAngleGenPrediction();
+        });
+        
+        document.getElementById('predictedAngleGen').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                this.submitAngleGenPrediction();
+            }
+        });
+        
+        document.getElementById('resetStatsGen').addEventListener('click', () => {
+            this.resetAngleGenStats();
+        });
     }
     
     generateRandomPositions() {
-        // 生成随机的白球位置
-        this.cueBall.x = this.tableOffsetX + this.ballRadius * 2 + Math.random() * (this.tableWidth - this.ballRadius * 4);
-        this.cueBall.y = this.tableOffsetY + this.ballRadius * 2 + Math.random() * (this.tableHeight - this.ballRadius * 4);
+        const config = this.trainingTypes[this.currentTrainingType];
+        let attempts = 0;
+        const maxAttempts = 50;
         
-        // 生成随机的目标球位置（确保不与白球重叠）
-        do {
-            this.targetBall.x = this.tableOffsetX + this.ballRadius * 2 + Math.random() * (this.tableWidth - this.ballRadius * 4);
-            this.targetBall.y = this.tableOffsetY + this.ballRadius * 2 + Math.random() * (this.tableHeight - this.ballRadius * 4);
-        } while (this.getDistance(this.cueBall, this.targetBall) < this.ballRadius * 6);
+        while (attempts < maxAttempts) {
+            // 生成随机的白球位置
+            this.cueBall.x = this.tableOffsetX + this.ballRadius * 2 + Math.random() * (this.tableWidth - this.ballRadius * 4);
+            this.cueBall.y = this.tableOffsetY + this.ballRadius * 2 + Math.random() * (this.tableHeight - this.ballRadius * 4);
+            
+            // 生成随机的目标球位置（确保不与白球重叠）
+            do {
+                this.targetBall.x = this.tableOffsetX + this.ballRadius * 2 + Math.random() * (this.tableWidth - this.ballRadius * 4);
+                this.targetBall.y = this.tableOffsetY + this.ballRadius * 2 + Math.random() * (this.tableHeight - this.ballRadius * 4);
+            } while (this.getDistance(this.cueBall, this.targetBall) < this.ballRadius * 6);
+            
+            // 找出所有合理的目标袋
+            this.findAvailablePockets();
+            
+            // 根据训练类型筛选合适的球位
+            if (this.currentTrainingType === 'random') {
+                if (this.availablePockets.length > 0) {
+                    this.selectedPocketIndex = 0;
+                    break;
+                }
+            } else {
+                const validPockets = this.getValidPocketsForTraining(config);
+                if (validPockets.length > 0) {
+                    this.availablePockets = validPockets;
+                    this.selectedPocketIndex = 0;
+                    break;
+                }
+            }
+            
+            attempts++;
+        }
         
-        // 找出所有合理的目标袋（排除角度过大的）
-        this.findAvailablePockets();
-        this.selectedPocketIndex = 0;
+        // 如果尝试次数过多，回退到随机模式
+        if (attempts >= maxAttempts) {
+            this.findAvailablePockets();
+            if (this.availablePockets.length > 0) {
+                this.selectedPocketIndex = 0;
+            }
+        }
         
-        // 重置显示状态
+        // 重置显示状态和角度输入
         this.showAimingLines = false;
+        this.showAngleInfo = false;
+        this.clearAngleInput();
         
         this.drawTable();
         this.drawAimView();
@@ -179,9 +295,10 @@ class PoolTrainer {
             
             if (distance < 25) { // 25像素的点击范围
                 this.selectedPocketIndex = i;
-                // 如果已经在显示角度，切换袋口时自动隐藏角度
-                if (this.showAimingLines) {
+                // 如果已经在显示瞄准线或角度，切换袋口时自动隐藏
+                if (this.showAimingLines || this.showAngleInfo) {
                     this.showAimingLines = false;
+                    this.showAngleInfo = false;
                 }
                 this.drawTable();
                 this.drawAimView();
@@ -258,6 +375,11 @@ class PoolTrainer {
         // 绘制瞄准线
         if (this.showAimingLines) {
             this.drawAimingLines();
+        }
+        
+        // 绘制角度信息
+        if (this.showAngleInfo) {
+            this.drawAngleIndicators();
         }
         
         // 绘制球
@@ -386,12 +508,23 @@ class PoolTrainer {
         
         // 重置虚线设置
         ctx.setLineDash([]);
+    }
+    
+    drawAngleIndicators() {
+        const ctx = this.tableCtx;
+        const selectedPocket = this.getSelectedPocket();
+        
+        if (!selectedPocket) return;
+        
+        // 计算目标球到袋口的线
+        const pocketLine = this.calculatePocketLine();
+        // 计算白球到目标球的线
+        const cueLine = this.calculateCueLine();
+        
+        if (!pocketLine || !cueLine) return;
         
         // 绘制角度指示器（在目标球位置）
         this.drawAngleIndicator(this.targetBall, pocketLine.angle, cueLine.angle);
-        
-        // 绘制角度信息
-        this.drawAngleInfo(ctx);
     }
     
     calculatePocketLine() {
@@ -457,13 +590,18 @@ class PoolTrainer {
         ctx.clearRect(0, 0, this.aimCanvas.width, this.aimCanvas.height);
         ctx.fillStyle = '#111';
         ctx.fillRect(0, 0, this.aimCanvas.width, this.aimCanvas.height);
-        if (!this.showAimingLines) {
+        if (!this.showAimingLines && !this.showAngleInfo) {
             ctx.fillStyle = '#ccc';
             ctx.font = '14px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText('点击"显示瞄准线和角度"', this.aimCanvas.width / 2, this.aimCanvas.height / 2 - 10);
+            ctx.fillText('点击"显示瞄准线"或"显示角度信息"', this.aimCanvas.width / 2, this.aimCanvas.height / 2 - 10);
             ctx.fillText('查看球体重叠效果', this.aimCanvas.width / 2, this.aimCanvas.height / 2 + 10);
             return;
+        }
+        
+        // 当显示瞄准线或角度信息时，都显示瞄准视角
+        if (!this.showAimingLines && this.showAngleInfo) {
+            // 只显示角度信息时，也显示瞄准视角
         }
         // 上半部分：假想球-目标球重叠
         const viewWidth = this.aimCanvas.width;
@@ -626,16 +764,29 @@ class PoolTrainer {
     updateStats() {
         const angleInfoElement = document.getElementById('angleInfo');
         
-        if (this.showAimingLines && this.getSelectedPocket()) {
+        if ((this.showAimingLines || this.showAngleInfo) && this.getSelectedPocket()) {
             const selectedPocket = this.getSelectedPocket();
             const pocketIndex = this.pockets.findIndex(p => p === selectedPocket);
             const pocketNames = ['左上袋', '中上袋', '右上袋', '左下袋', '中下袋', '右下袋'];
             const pocketName = pocketNames[pocketIndex] || '未知';
             
-            angleInfoElement.textContent = `目标: ${pocketName} | 点击球袋可切换目标`;
+            // 显示额外的角度信息
+            if (this.showAngleInfo) {
+                const pocketLine = this.calculatePocketLine();
+                const cueLine = this.calculateCueLine();
+                if (pocketLine && cueLine) {
+                    const angleDiff = Math.abs(pocketLine.angle - cueLine.angle);
+                    const angleDegrees = this.radiansToDegrees(angleDiff);
+                    angleInfoElement.textContent = `目标: ${pocketName} | 击球角度: ${angleDegrees.toFixed(1)}° | 点击球袋可切换目标`;
+                } else {
+                    angleInfoElement.textContent = `目标: ${pocketName} | 点击球袋可切换目标`;
+                }
+            } else {
+                angleInfoElement.textContent = `目标: ${pocketName} | 点击球袋可切换目标`;
+            }
         } else {
             angleInfoElement.textContent = this.availablePockets.length > 0 ? 
-                '点击球袋选择目标，然后显示瞄准线查看角度信息' : 
+                '点击球袋选择目标，然后显示瞄准线或角度信息' : 
                 '点击"随机生成球位"开始练习';
         }
     }
@@ -648,15 +799,143 @@ class PoolTrainer {
         return degrees * Math.PI / 180;
     }
     
+    // 训练类型相关方法
+    getValidPocketsForTraining(config) {
+        const validPockets = [];
+        
+        for (const availablePocket of this.availablePockets) {
+            const distance = this.getDistance(this.cueBall, this.targetBall);
+            const angle = availablePocket.angle;
+            
+            // 检查距离是否符合要求
+            if (distance < config.distance[0] || distance > config.distance[1]) {
+                continue;
+            }
+            
+            // 检查角度是否符合要求
+            if (angle < config.angle[0] || angle > config.angle[1]) {
+                continue;
+            }
+            
+            // 检查袋口类型要求
+            if (config.pocketType) {
+                const pocketIndex = availablePocket.index;
+                if (config.pocketType === 'middle' && pocketIndex !== 1 && pocketIndex !== 4) {
+                    continue;
+                }
+                if (config.pocketType === 'corner' && (pocketIndex === 1 || pocketIndex === 4)) {
+                    continue;
+                }
+            }
+            
+            validPockets.push(availablePocket);
+        }
+        
+        return validPockets;
+    }
+    
+    updateTrainingTypeDisplay() {
+        const typeInfo = this.trainingTypes[this.currentTrainingType];
+        document.getElementById('currentTrainingType').textContent = typeInfo.name;
+    }
+    
+    // 角度输入和统计相关方法
+    clearAngleInput() {
+        document.getElementById('predictedAngle').value = '';
+        document.getElementById('angleResult').textContent = '';
+        document.getElementById('angleResult').className = 'angle-result neutral';
+        document.getElementById('submitAngle').disabled = false;
+    }
+    
+    submitAnglePrediction() {
+        const predictedAngle = parseFloat(document.getElementById('predictedAngle').value);
+        const resultElement = document.getElementById('angleResult');
+        
+        if (isNaN(predictedAngle) || predictedAngle < 0 || predictedAngle > 90) {
+            resultElement.textContent = '请输入0-90之间的有效角度';
+            resultElement.className = 'angle-result incorrect';
+            return;
+        }
+        
+        if (!this.showAngleInfo) {
+            resultElement.textContent = '请先显示角度信息查看正确答案';
+            resultElement.className = 'angle-result neutral';
+            return;
+        }
+        
+        // 计算实际角度
+        const pocketLine = this.calculatePocketLine();
+        const cueLine = this.calculateCueLine();
+        
+        if (!pocketLine || !cueLine) {
+            resultElement.textContent = '无法计算角度，请重新生成球位';
+            resultElement.className = 'angle-result incorrect';
+            return;
+        }
+        
+        const actualAngle = Math.abs(this.radiansToDegrees(pocketLine.angle - cueLine.angle));
+        const error = Math.abs(actualAngle - predictedAngle);
+        
+        // 更新统计
+        this.trainingStats.practiceCount++;
+        this.trainingStats.totalError += error;
+        this.trainingStats.errors.push(error);
+        
+        // 判断是否正确（误差在3度内认为正确）
+        const isCorrect = error <= 3;
+        if (isCorrect) {
+            this.trainingStats.correctCount++;
+            resultElement.textContent = `正确！实际角度: ${actualAngle.toFixed(1)}°，误差: ${error.toFixed(1)}°`;
+            resultElement.className = 'angle-result correct';
+        } else {
+            resultElement.textContent = `需要改进。实际角度: ${actualAngle.toFixed(1)}°，误差: ${error.toFixed(1)}°`;
+            resultElement.className = 'angle-result incorrect';
+        }
+        
+        // 禁用按钮，防止重复提交
+        document.getElementById('submitAngle').disabled = true;
+        
+        // 更新统计显示
+        this.updateStatsDisplay();
+    }
+    
+    updateStatsDisplay() {
+        const stats = this.trainingStats;
+        document.getElementById('practiceCount').textContent = stats.practiceCount;
+        document.getElementById('correctCount').textContent = stats.correctCount;
+        
+        const accuracy = stats.practiceCount > 0 ? (stats.correctCount / stats.practiceCount * 100).toFixed(1) : 0;
+        document.getElementById('accuracyRate').textContent = accuracy + '%';
+        
+        const avgError = stats.practiceCount > 0 ? (stats.totalError / stats.practiceCount).toFixed(1) : 0;
+        document.getElementById('averageError').textContent = avgError + '°';
+    }
+    
+    resetTrainingStats() {
+        this.trainingStats = {
+            practiceCount: 0,
+            correctCount: 0,
+            totalError: 0,
+            errors: []
+        };
+        this.updateStatsDisplay();
+        this.clearAngleInput();
+    }
+    
     // 角度生成器相关方法
     initAngleGenerator() {
         this.drawAngleCanvas();
+        this.drawSineCurve();
+        this.updateTrainingTypeDisplay();
+        this.updateStatsDisplay();
+        this.updateAngleGenStatsDisplay();
     }
     
     generateRandomAngle() {
         // 生成0-90度的随机角度
         this.randomAngle = Math.random() * 90;
         this.showAngleValue = false;
+        this.clearAngleGenInput();
         this.drawAngleCanvas();
         this.updateAngleInfo();
         this.updateToggleButton();
@@ -679,6 +958,7 @@ class PoolTrainer {
         this.randomAngle = 0;
         this.showAngleValue = false;
         this.showReferenceAngles = false;
+        this.clearAngleGenInput();
         this.drawAngleCanvas();
         this.updateAngleInfo();
         this.updateToggleButton();
@@ -699,90 +979,318 @@ class PoolTrainer {
         const ctx = this.angleCtx;
         const width = this.angleCanvas.width;
         const height = this.angleCanvas.height;
-        const centerX = width / 2;
-        const centerY = height / 2;
-        const radius = Math.min(width, height) * 0.35;
+        const padding = 60;
+        const originX = padding;
+        const originY = height - padding;
+        const maxRadius = Math.min(width - 2 * padding, height - 2 * padding) * 0.8;
 
         // 清空画布
         ctx.clearRect(0, 0, width, height);
-
-        // 绘制外部背景（深紫色）
-        document.getElementById('angleCanvas').style.backgroundColor = '#6B5B95';
 
         // 绘制练习区域（整个矩形区域为绿色）
         ctx.fillStyle = '#0f5132';  // 与球桌相同的绿色
         ctx.fillRect(0, 0, width, height);
 
-        // 如果显示参考角度
-        if (this.showReferenceAngles) {
-            // 绘制参考角度（15°、30°、45°、60°、75°）
-            const referenceAngles = [15, 30, 45, 60, 75];
-            referenceAngles.forEach(angle => {
-                ctx.beginPath();
-                ctx.moveTo(centerX, centerY);
-                const endX = centerX + radius * Math.cos(this.degreesToRadians(angle));
-                const endY = centerY - radius * Math.sin(this.degreesToRadians(angle));
-                ctx.lineTo(endX, endY);
-                ctx.strokeStyle = '#90EE90'; // 浅绿色
-                ctx.lineWidth = 1;
-                ctx.stroke();
+        // 绘制坐标轴
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 3;
+        
+        // X轴（0度方向）- 延长到边缘
+        ctx.beginPath();
+        ctx.moveTo(originX, originY);
+        ctx.lineTo(width - padding / 2, originY);
+        ctx.stroke();
+        
+        // Y轴（90度方向）- 延长到边缘
+        ctx.beginPath();
+        ctx.moveTo(originX, originY);
+        ctx.lineTo(originX, padding / 2);
+        ctx.stroke();
 
-                // 添加角度标签
-                const labelRadius = radius + 25;
-                const labelX = centerX + labelRadius * Math.cos(this.degreesToRadians(angle));
-                const labelY = centerY - labelRadius * Math.sin(this.degreesToRadians(angle));
+        // 绘制坐标轴标签
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '16px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('0°', width - padding / 2 + 20, originY + 5);
+        ctx.fillText('90°', originX - 5, padding / 2 - 10);
+
+        // 如果显示参考角度，绘制网格线和标签
+        if (this.showReferenceAngles) {
+            const gridAngles = [15, 30, 45, 60, 75];
+            gridAngles.forEach(angle => {
+                // 绘制从原点到边缘的径向线
+                ctx.beginPath();
+                ctx.moveTo(originX, originY);
+                const referenceLineLength = maxRadius * 1.3; // 参考角度线长度增加30%
+                const endX = originX + referenceLineLength * Math.cos(this.degreesToRadians(angle));
+                const endY = originY - referenceLineLength * Math.sin(this.degreesToRadians(angle));
+                ctx.lineTo(endX, endY);
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)'; // 半透明白色网格线
+                ctx.lineWidth = 1;
+                ctx.setLineDash([2, 2]); // 虚线
+                ctx.stroke();
+                ctx.setLineDash([]); // 重置虚线
+                
+                // 绘制角度标签
+                const labelRadius = referenceLineLength + 25;
+                const labelX = originX + labelRadius * Math.cos(this.degreesToRadians(angle));
+                const labelY = originY - labelRadius * Math.sin(this.degreesToRadians(angle));
                 ctx.fillStyle = '#90EE90'; // 浅绿色
                 ctx.font = '14px Arial';
                 ctx.textAlign = 'center';
                 ctx.fillText(angle + '°', labelX, labelY);
             });
+
+            // 绘制同心圆弧（只绘制第一象限）
+            const gridRadii = [maxRadius * 0.3, maxRadius * 0.6, maxRadius * 0.9];
+            gridRadii.forEach(r => {
+                ctx.beginPath();
+                ctx.arc(originX, originY, r, -Math.PI/2, 0);
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'; // 更淡的网格线
+                ctx.lineWidth = 1;
+                ctx.setLineDash([2, 2]); // 虚线
+                ctx.stroke();
+                ctx.setLineDash([]); // 重置虚线
+            });
         }
 
-        // 绘制随机角度
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        const endX = centerX + radius * Math.cos(this.degreesToRadians(this.randomAngle));
-        const endY = centerY - radius * Math.sin(this.degreesToRadians(this.randomAngle));
-        ctx.lineTo(endX, endY);
-        ctx.strokeStyle = '#ffffff'; // 白色
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        // 绘制随机角度线
+        if (this.randomAngle > 0) {
+            ctx.beginPath();
+            ctx.moveTo(originX, originY);
+            const angleLineLength = maxRadius * 1.3; // 角度线长度增加30%
+            const endX = originX + angleLineLength * Math.cos(this.degreesToRadians(this.randomAngle));
+            const endY = originY - angleLineLength * Math.sin(this.degreesToRadians(this.randomAngle));
+            ctx.lineTo(endX, endY);
+            ctx.strokeStyle = '#ffffff'; // 白色
+            ctx.lineWidth = 4;
+            ctx.stroke();
 
-        // 绘制水平线
-        ctx.beginPath();
-        ctx.moveTo(centerX - radius, centerY);
-        ctx.lineTo(centerX + radius, centerY);
-        ctx.strokeStyle = '#ffffff'; // 白色
-        ctx.lineWidth = 1;
-        ctx.stroke();
+            // 绘制角度扇形
+            ctx.beginPath();
+            ctx.moveTo(originX, originY);
+            ctx.arc(originX, originY, maxRadius * 0.15, 0, -this.degreesToRadians(this.randomAngle), true);
+            ctx.lineTo(originX, originY);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'; // 半透明白色
+            ctx.fill();
+        }
 
-        // 绘制角度扇形
+        // 绘制原点
+        ctx.fillStyle = '#ffffff';
         ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.arc(centerX, centerY, radius * 0.2, 0, this.degreesToRadians(this.randomAngle), true);
-        ctx.lineTo(centerX, centerY);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'; // 半透明白色
+        ctx.arc(originX, originY, 5, 0, 2 * Math.PI);
         ctx.fill();
 
         // 如果需要显示角度值
-        if (this.showAngleValue) {
+        if (this.showAngleValue && this.randomAngle > 0) {
             ctx.fillStyle = '#ffffff'; // 白色
             ctx.font = 'bold 24px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText(Math.round(this.randomAngle) + '°', centerX, centerY - radius - 20);
+            const textX = originX + maxRadius * 0.3 * Math.cos(this.degreesToRadians(this.randomAngle / 2));
+            const textY = originY - maxRadius * 0.3 * Math.sin(this.degreesToRadians(this.randomAngle / 2));
+            ctx.fillText(Math.round(this.randomAngle) + '°', textX, textY);
         }
     }
     
     updateAngleInfo() {
-        const infoElement = document.getElementById('currentAngleInfo');
+        // 移除角度信息显示，因为已经删除了currentAngleInfo元素
+    }
+    
+    drawSineCurve() {
+        const ctx = this.sineCurveCtx;
+        const width = this.sineCurveCanvas.width;
+        const height = this.sineCurveCanvas.height;
+        const padding = 40;
+        const chartWidth = width - 2 * padding;
+        const chartHeight = height - 2 * padding;
+        
+        // 清空画布
+        ctx.clearRect(0, 0, width, height);
+        
+        // 绘制坐标轴
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        
+        // X轴（角度轴）
+        ctx.beginPath();
+        ctx.moveTo(padding, height - padding);
+        ctx.lineTo(width - padding, height - padding);
+        ctx.stroke();
+        
+        // Y轴（正弦值轴）
+        ctx.beginPath();
+        ctx.moveTo(padding, height - padding);
+        ctx.lineTo(padding, padding);
+        ctx.stroke();
+        
+        // 绘制网格线和标签
+        const angles = [0, 15, 30, 45, 60, 75, 90];
+        const sineValues = [0, 0.5, 1, 1.5, 2];
+        
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([2, 2]);
+        
+        // 垂直网格线（角度）
+        angles.forEach(angle => {
+            const x = padding + (angle / 90) * chartWidth;
+            ctx.beginPath();
+            ctx.moveTo(x, height - padding);
+            ctx.lineTo(x, padding);
+            ctx.stroke();
+            
+            // 角度标签
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '10px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(angle + '°', x, height - padding + 15);
+        });
+        
+        // 水平网格线（正弦值）
+        sineValues.forEach(value => {
+            const y = height - padding - (value / 2) * chartHeight;
+            ctx.beginPath();
+            ctx.moveTo(padding, y);
+            ctx.lineTo(width - padding, y);
+            ctx.stroke();
+            
+            // 正弦值标签
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '10px Arial';
+            ctx.textAlign = 'right';
+            ctx.fillText(value.toFixed(1), padding - 5, y + 3);
+        });
+        
+        ctx.setLineDash([]); // 重置虚线
+        
+        // 绘制正弦曲线
+        ctx.strokeStyle = '#4CAF50';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        
+        for (let angle = 0; angle <= 90; angle += 0.5) {
+            const x = padding + (angle / 90) * chartWidth;
+            const sineValue = Math.sin(this.degreesToRadians(angle)) * 2;
+            const y = height - padding - (sineValue / 2) * chartHeight;
+            
+            if (angle === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+        
+        // 标记特殊角度点
+        const specialAngles = [0, 15, 30, 45, 60, 75, 90];
+        specialAngles.forEach(angle => {
+            const x = padding + (angle / 90) * chartWidth;
+            const sineValue = Math.sin(this.degreesToRadians(angle)) * 2;
+            const y = height - padding - (sineValue / 2) * chartHeight;
+            
+            ctx.fillStyle = '#ff6b6b';
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // 显示数值
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '9px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(sineValue.toFixed(3), x, y - 8);
+        });
+        
+        // 坐标轴标签
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('角度 (°)', width / 2, height - 5);
+        
+        ctx.save();
+        ctx.translate(15, height / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText('2×sin(角度)', 0, 0);
+        ctx.restore();
+    }
+    
+    // 角度生成器的输入和统计相关方法
+    clearAngleGenInput() {
+        document.getElementById('predictedAngleGen').value = '';
+        document.getElementById('angleResultGen').textContent = '';
+        document.getElementById('angleResultGen').className = 'angle-result neutral';
+        document.getElementById('submitAngleGen').disabled = false;
+    }
+    
+    submitAngleGenPrediction() {
+        const predictedAngle = parseFloat(document.getElementById('predictedAngleGen').value);
+        const resultElement = document.getElementById('angleResultGen');
+        
+        if (isNaN(predictedAngle) || predictedAngle < 0 || predictedAngle > 90) {
+            resultElement.textContent = '请输入0-90之间的有效角度';
+            resultElement.className = 'angle-result incorrect';
+            return;
+        }
         
         if (this.randomAngle === 0) {
-            infoElement.textContent = '🎯 点击"生成随机角度"开始角度识别练习';
-        } else if (this.showAngleValue) {
-            infoElement.innerHTML = `✅ 当前角度: <strong>${this.randomAngle.toFixed(1)}°</strong> - 您猜对了吗？`;
-        } else {
-            infoElement.textContent = '🤔 观察红线角度，猜测度数后点击"显示角度值"查看答案';
+            resultElement.textContent = '请先生成随机角度';
+            resultElement.className = 'angle-result neutral';
+            return;
         }
+        
+        if (!this.showAngleValue) {
+            resultElement.textContent = '请先显示角度值查看正确答案';
+            resultElement.className = 'angle-result neutral';
+            return;
+        }
+        
+        // 计算误差
+        const actualAngle = this.randomAngle;
+        const error = Math.abs(actualAngle - predictedAngle);
+        
+        // 更新统计
+        this.angleGenStats.practiceCount++;
+        this.angleGenStats.totalError += error;
+        this.angleGenStats.errors.push(error);
+        
+        // 判断是否正确（误差在3度内认为正确）
+        const isCorrect = error <= 3;
+        if (isCorrect) {
+            this.angleGenStats.correctCount++;
+            resultElement.textContent = `正确！实际角度: ${actualAngle.toFixed(1)}°，误差: ${error.toFixed(1)}°`;
+            resultElement.className = 'angle-result correct';
+        } else {
+            resultElement.textContent = `需要改进。实际角度: ${actualAngle.toFixed(1)}°，误差: ${error.toFixed(1)}°`;
+            resultElement.className = 'angle-result incorrect';
+        }
+        
+        // 禁用按钮，防止重复提交
+        document.getElementById('submitAngleGen').disabled = true;
+        
+        // 更新统计显示
+        this.updateAngleGenStatsDisplay();
+    }
+    
+    updateAngleGenStatsDisplay() {
+        const stats = this.angleGenStats;
+        document.getElementById('practiceCountGen').textContent = stats.practiceCount;
+        document.getElementById('correctCountGen').textContent = stats.correctCount;
+        
+        const accuracy = stats.practiceCount > 0 ? (stats.correctCount / stats.practiceCount * 100).toFixed(1) : 0;
+        document.getElementById('accuracyRateGen').textContent = accuracy + '%';
+        
+        const avgError = stats.practiceCount > 0 ? (stats.totalError / stats.practiceCount).toFixed(1) : 0;
+        document.getElementById('averageErrorGen').textContent = avgError + '°';
+    }
+    
+    resetAngleGenStats() {
+        this.angleGenStats = {
+            practiceCount: 0,
+            correctCount: 0,
+            totalError: 0,
+            errors: []
+        };
+        this.updateAngleGenStatsDisplay();
+        this.clearAngleGenInput();
     }
 }
 

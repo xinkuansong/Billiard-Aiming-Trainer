@@ -65,6 +65,50 @@ header p {
 /* 控制按钮 */
 .controls {
     display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.training-type-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+}
+
+.training-type-selector label {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.btn-selector {
+    padding: 8px 16px;
+    border: 2px solid #3d4a5f;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #2d3748;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 200px;
+}
+
+.btn-selector:hover {
+    border-color: #4CAF50;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-selector:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
+
+.control-buttons {
+    display: flex;
     gap: 15px;
     justify-content: center;
     flex-wrap: wrap;
@@ -156,6 +200,144 @@ header p {
     font-size: 0.9rem;
 }
 
+/* 角度输入容器 */
+.angle-input-container {
+    background: #2d3748;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #3d4a5f;
+}
+
+.angle-input-container h3 {
+    margin-bottom: 15px;
+    color: #ffffff;
+    font-size: 1.3rem;
+}
+
+.angle-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.angle-input-group label {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1rem;
+    white-space: nowrap;
+}
+
+.angle-input {
+    padding: 8px 12px;
+    border: 2px solid #3d4a5f;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #2d3748;
+    font-size: 1rem;
+    width: 120px;
+    transition: all 0.3s ease;
+}
+
+.angle-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
+
+.btn-confirm {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-confirm:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+}
+
+.btn-confirm:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.angle-result {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.angle-result.correct {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4CAF50;
+    border: 2px solid #4CAF50;
+}
+
+.angle-result.incorrect {
+    background: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+    border: 2px solid #f44336;
+}
+
+.angle-result.neutral {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 2px solid #3d4a5f;
+}
+
+/* 训练统计 */
+.training-stats {
+    border-top: 1px solid #3d4a5f;
+    padding-top: 20px;
+}
+
+.training-stats h4 {
+    margin-bottom: 15px;
+    color: #ffffff;
+    font-size: 1.2rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.stat-label {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.stat-value {
+    color: #4CAF50;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
 /* 使用说明 */
 .instructions {
     background: #2d3748;
@@ -193,16 +375,32 @@ header p {
 /* 角度生成器 */
 .angle-generator {
     background: #2d3748;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    margin-top: 30px;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
     border: 1px solid #3d4a5f;
+}
+
+/* 角度生成器输入部分 */
+.angle-generator-input {
+    background: #374151;
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid #4b5563;
+    align-self: flex-start;
+}
+
+.angle-generator-input h4 {
+    margin-bottom: 15px;
+    color: #ffffff;
+    font-size: 1.2rem;
+    text-align: center;
 }
 
 .angle-generator-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .angle-generator-header h3 {
@@ -233,6 +431,8 @@ header p {
         0 8px 25px rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    max-width: 100%;
+    height: auto;
 }
 
 #angleCanvas:hover {
@@ -269,28 +469,85 @@ header p {
 
 .angle-practice-container {
     display: flex;
-    gap: 2rem;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.angle-practice-top {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.angle-display-area {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: center;
+    flex: 1;
+}
+
+.angle-practice-bottom {
+    display: flex;
+    gap: 20px;
     align-items: flex-start;
 }
 
 .angle-display-container {
     flex: 1;
     min-width: 0; /* 防止flex子项溢出 */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .angle-reference-table {
-    width: 360px; /* 稍微加宽以适应4列 */
-    flex-shrink: 0;
-    padding: 0.8rem;
+    flex: 1;
+    min-width: 300px;
+    padding: 15px;
     background-color: #2B6D39;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.angle-reference-table h3 {
-    margin-bottom: 0.3rem;
+.sine-curve-container {
+    flex: 1;
+    min-width: 300px;
+    padding: 15px;
+    background-color: #374151;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.sine-curve-container h4 {
+    margin-bottom: 15px;
+    color: #ffffff;
+    font-size: 1.1rem;
+}
+
+#sineCurve {
+    background: #1f2937;
+    border: 1px solid #4b5563;
+    border-radius: 6px;
+}
+
+.angle-reference-table h4 {
+    margin-bottom: 10px;
     color: #ffffff;
     text-align: center;
+    font-size: 1.1rem;
 }
 
 .ball-info {
@@ -349,12 +606,21 @@ header p {
 
 /* 响应式设计 */
 @media (max-width: 1024px) {
-    .angle-practice-container {
+    .angle-practice-top {
+        flex-direction: column;
+    }
+    
+    .angle-practice-bottom {
         flex-direction: column;
     }
 
-    .angle-reference-table {
-        width: 100%;
+    .angle-display-area {
+        flex-direction: column;
+    }
+
+    .angle-reference-table,
+    .sine-curve-container {
+        min-width: auto;
     }
     
     .angle-reference-table table {
@@ -370,6 +636,8 @@ header p {
 
     .aim-view-container {
         margin-top: 20px;
+        flex-direction: column;
+        gap: 15px;
     }
 
     #poolTable {
@@ -385,10 +653,41 @@ header p {
         gap: 10px;
     }
 
+    .training-type-selector {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+
+    .btn-selector {
+        min-width: auto;
+        width: 100%;
+    }
+
+    .control-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
     .btn {
         width: 100%;
         padding: 15px;
         font-size: 1.1rem;
+    }
+
+    .angle-input-group {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+
+    .angle-input {
+        width: 100%;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
     }
 
     .angle-controls-row {
@@ -415,6 +714,44 @@ header p {
     .angle-info {
         padding: 15px;
         width: 100%;
+    }
+
+    .angle-generator-input {
+        padding: 15px;
+        margin-top: 15px;
+    }
+
+    .angle-generator-input .angle-input-group {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+
+    .angle-generator-input .angle-input {
+        width: 100%;
+    }
+
+    .angle-generator-input .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .angle-practice-top {
+        flex-direction: column;
+    }
+    
+    .angle-practice-bottom {
+        flex-direction: column;
+    }
+
+    .angle-display-area {
+        flex-direction: column;
+    }
+
+    #sineCurve {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
     }
 
     header h1 {
