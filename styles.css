@@ -42,7 +42,9 @@ header p {
     display: grid;
     grid-template-columns: 1fr 350px;
     gap: 30px;
-    margin-bottom: 30px;
+    margin: 0 auto 30px auto;
+    max-width: 1200px;
+    width: 100%;
 }
 
 .table-container {
@@ -302,8 +304,12 @@ header p {
 
 /* 训练统计 */
 .training-stats {
-    border-top: 1px solid #3d4a5f;
-    padding-top: 20px;
+    background: #2d3748;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #3d4a5f;
+    margin-top: 20px;
 }
 
 .training-stats h4 {
@@ -378,8 +384,10 @@ header p {
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
+    margin: 20px auto;
     border: 1px solid #3d4a5f;
+    max-width: 1200px;
+    width: 100%;
 }
 
 /* 角度生成器输入部分 */
@@ -514,7 +522,7 @@ header p {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .sine-curve-container {
@@ -720,7 +728,7 @@ header p {
 
     .angle-generator {
         padding: 20px;
-        margin-top: 20px;
+        margin: 20px auto;
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;

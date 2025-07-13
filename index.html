@@ -51,14 +51,6 @@
             </div>
             
             <div class="aim-view-container">
-                <div class="aim-view">
-                    <h3>瞄准视角</h3>
-                    <canvas id="aimView" width="300" height="200"></canvas>
-                    <div class="aim-info">
-                        <p id="angleInfo">点击"显示瞄准线"或"显示角度信息"查看相关信息</p>
-                    </div>
-                </div>
-                
                 <div class="angle-input-container">
                     <h3>角度预测</h3>
                     <div class="angle-input-group">
@@ -67,6 +59,15 @@
                         <button id="submitAngle" class="btn btn-confirm">确认</button>
                     </div>
                     <div class="angle-result" id="angleResult"></div>
+                </div>
+                
+                <div class="aim-view">
+                    <h3>瞄准视角</h3>
+                    <canvas id="aimView" width="300" height="200"></canvas>
+                    <div class="aim-info">
+                        <p id="angleInfo">点击"显示瞄准线"或"显示角度信息"查看相关信息</p>
+                    </div>
+                </div>
                     
                     <div class="training-stats">
                         <h4>训练统计</h4>
@@ -104,7 +105,7 @@
                 <div class="angle-practice-top">
                     <div class="angle-display-area">
                         <div class="angle-display-container">
-                            <canvas id="angleCanvas" width="800" height="600"></canvas>
+                            <canvas id="angleCanvas" width="640" height="480"></canvas>
                             <div class="angle-controls">
                                 <div class="angle-controls-row">
                                     <button id="generateRandomAngle" class="btn btn-primary">生成随机角度</button>
@@ -190,7 +191,7 @@
                     
                     <div class="sine-curve-container">
                         <h4>正弦曲线 (0°-90°)</h4>
-                        <canvas id="sineCurve" width="400" height="400"></canvas>
+                        <canvas id="sineCurve" width="350" height="280"></canvas>
                     </div>
                 </div>
             </div>
