@@ -857,10 +857,12 @@ class PoolTrainer {
             return;
         }
         
+        // 如果没有显示角度信息，自动显示
         if (!this.showAngleInfo) {
-            resultElement.textContent = '请先显示角度信息查看正确答案';
-            resultElement.className = 'angle-result neutral';
-            return;
+            this.showAngleInfo = true;
+            this.drawTable();
+            this.drawAimView();
+            this.updateStats();
         }
         
         // 计算实际角度
@@ -1237,10 +1239,10 @@ class PoolTrainer {
             return;
         }
         
+        // 如果没有显示角度值，自动显示
         if (!this.showAngleValue) {
-            resultElement.textContent = '请先显示角度值查看正确答案';
-            resultElement.className = 'angle-result neutral';
-            return;
+            this.showAngleValue = true;
+            this.drawAngleCanvas();
         }
         
         // 计算误差
