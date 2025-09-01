@@ -372,7 +372,11 @@ class PoolTrainer {
             }
         });
         
-        // 绘制瞄准线
+        // 绘制球
+        this.drawBall(this.cueBall, '#fff');
+        this.drawBall(this.targetBall, '#ff0000');
+        
+        // 绘制瞄准线和角度信息（放在最后，确保在顶层）
         if (this.showAimingLines) {
             this.drawAimingLines();
         }
@@ -381,10 +385,6 @@ class PoolTrainer {
         if (this.showAngleInfo) {
             this.drawAngleIndicators();
         }
-        
-        // 绘制球
-        this.drawBall(this.cueBall, '#fff');
-        this.drawBall(this.targetBall, '#ff0000');
     }
     
     drawBall(ball, color) {
@@ -461,14 +461,14 @@ class PoolTrainer {
             y: this.targetBall.y - Math.sin(angle) * (this.ballRadius * 2)  // 注意这里是减号，表示反方向
         };
         
-        // 绘制假想球（半透明）
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        // 绘制假想球（半透明黄色）
+        ctx.fillStyle = 'rgba(255, 215, 0, 0.3)';
         ctx.beginPath();
         ctx.arc(phantomBall.x, phantomBall.y, this.ballRadius, 0, 2 * Math.PI);
         ctx.fill();
         
         // 绘制假想球的边框
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.arc(phantomBall.x, phantomBall.y, this.ballRadius, 0, 2 * Math.PI);
@@ -477,8 +477,8 @@ class PoolTrainer {
         // 绘制连接假想球和白球中心的虚线（延长线）
         ctx.beginPath();
         ctx.setLineDash([3, 3]);  // 使用更短的虚线间隔
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'rgba(0, 150, 255, 0.8)'; // 蓝色虚线
+        ctx.lineWidth = 2;
         
         // 计算白球到假想球的方向向量
         const phantomToCueAngle = this.getAngle(phantomBall, this.cueBall);
@@ -543,6 +543,36 @@ class PoolTrainer {
         ctx.lineTo(cueToTargetExtendedEnd.x, cueToTargetExtendedEnd.y);
         ctx.stroke();
         
+        // 绘制平行于目标球到袋口连线、穿过白球中心的黄色虚线
+        ctx.beginPath();
+        ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = '#FFD700';
+        ctx.lineWidth = 1;
+        
+        // 使用目标球到袋口的方向向量
+        const pocketDirection = {
+            x: Math.cos(pocketLine.angle),
+            y: Math.sin(pocketLine.angle)
+        };
+        
+        // 设置线段长度（不需要太长）
+        const parallelLineLength = 80; // 总长度160像素
+        
+        // 计算平行线的起点和终点（穿过白球中心）
+        const parallelStart = {
+            x: this.cueBall.x - pocketDirection.x * parallelLineLength,
+            y: this.cueBall.y - pocketDirection.y * parallelLineLength
+        };
+        
+        const parallelEnd = {
+            x: this.cueBall.x + pocketDirection.x * parallelLineLength,
+            y: this.cueBall.y + pocketDirection.y * parallelLineLength
+        };
+        
+        ctx.moveTo(parallelStart.x, parallelStart.y);
+        ctx.lineTo(parallelEnd.x, parallelEnd.y);
+        ctx.stroke();
+        
         // 重置虚线设置
         ctx.setLineDash([]);
     }
@@ -567,14 +597,16 @@ class PoolTrainer {
             y: this.targetBall.y - Math.sin(angle) * (this.ballRadius * 2)
         };
         
-        // 计算白球到假想球的连线角度
+        // 计算假想球到白球的连线角度
         const phantomToCueAngle = this.getAngle(phantomBall, this.cueBall);
         
         // 在目标球位置绘制角度指示器（白球-目标球连线与进球线的角度）
         this.drawAngleIndicator(this.targetBall, pocketLine.angle, cueLine.angle, '击球角度');
         
-        // 在假想球位置绘制角度指示器（白球-假想球连线与进球线的角度）
-        this.drawAngleIndicator(phantomBall, pocketLine.angle, phantomToCueAngle, '瞄准角度');
+        // 在假想球位置绘制角度指示器（假想球-白球连线与进球线的角度）
+        // 使用进球线的反方向与假想球到白球连线的夹角，确保扇形在相反方向
+        const reversePocketAngle = pocketLine.angle + Math.PI; // 进球线的反方向
+        this.drawAngleIndicator(phantomBall, reversePocketAngle, phantomToCueAngle, '瞄准角度');
     }
     
     calculatePocketLine() {
@@ -602,13 +634,65 @@ class PoolTrainer {
         const ctx = this.tableCtx;
         const radius = 30;
         
-        // 确保角度在正确的范围内
-        let startAngle = Math.min(angle1, angle2);
-        let endAngle = Math.max(angle1, angle2);
+        // 使用向量点积计算夹角大小
+        const vec1 = { x: Math.cos(angle1), y: Math.sin(angle1) };
+        const vec2 = { x: Math.cos(angle2), y: Math.sin(angle2) };
+        const dotProduct = vec1.x * vec2.x + vec1.y * vec2.y;
+        let angleDiff = Math.acos(Math.max(-1, Math.min(1, dotProduct)));
         
-        // 处理跨越360度的情况
-        if (endAngle - startAngle > Math.PI) {
-            [startAngle, endAngle] = [endAngle, startAngle + 2 * Math.PI];
+        // 确保是锐角
+        if (angleDiff > Math.PI / 2) {
+            angleDiff = Math.PI - angleDiff;
+        }
+        
+        // 使用向量叉积判断方向，然后选择较小的扇形
+        const crossProduct = vec1.x * vec2.y - vec1.y * vec2.x;
+        
+        let startAngle, endAngle;
+        
+        if (crossProduct >= 0) {
+            // angle2 在 angle1 的逆时针方向
+            // 检查直接绘制的角度是否等于我们计算的锐角
+            let directDiff = angle2 - angle1;
+            if (directDiff < 0) directDiff += 2 * Math.PI;
+            
+            if (Math.abs(directDiff - angleDiff) < 0.1) {
+                // 直接从 angle1 到 angle2
+                startAngle = angle1;
+                endAngle = angle2;
+            } else {
+                // 绘制另一侧（较小的扇形）
+                startAngle = angle2;
+                endAngle = angle1 + 2 * Math.PI;
+            }
+        } else {
+            // angle2 在 angle1 的顺时针方向
+            let directDiff = angle1 - angle2;
+            if (directDiff < 0) directDiff += 2 * Math.PI;
+            
+            if (Math.abs(directDiff - angleDiff) < 0.1) {
+                // 直接从 angle2 到 angle1
+                startAngle = angle2;
+                endAngle = angle1;
+            } else {
+                // 绘制另一侧（较小的扇形）
+                startAngle = angle1;
+                endAngle = angle2 + 2 * Math.PI;
+            }
+        }
+        
+        // 最终检查：确保扇形角度等于计算的锐角
+        let finalSpan = endAngle - startAngle;
+        if (finalSpan > 2 * Math.PI) finalSpan -= 2 * Math.PI;
+        if (Math.abs(finalSpan - angleDiff) > 0.1) {
+            // 如果不匹配，强制设置为锐角大小
+            if (crossProduct >= 0) {
+                startAngle = angle1;
+                endAngle = angle1 + angleDiff;
+            } else {
+                startAngle = angle1 - angleDiff;
+                endAngle = angle1;
+            }
         }
         
         // 绘制角度扇形
@@ -626,15 +710,31 @@ class PoolTrainer {
         ctx.arc(center.x, center.y, radius, startAngle, endAngle);
         ctx.stroke();
         
-        // 绘制角度文本
-        const midAngle = (startAngle + endAngle) / 2;
-        const textX = center.x + Math.cos(midAngle) * (radius + 15);
-        const textY = center.y + Math.sin(midAngle) * (radius + 15);
+        // 绘制角度文本 - 根据标签类型选择不同的位置
+        let textAngle;
+        if (label === '击球角度') {
+            // 击球角度显示在扇形中心方向
+            textAngle = (startAngle + endAngle) / 2;
+        } else if (label === '瞄准角度') {
+            // 瞄准角度显示在扇形中心方向
+            textAngle = (startAngle + endAngle) / 2;
+        } else {
+            // 默认位置
+            textAngle = (startAngle + endAngle) / 2;
+        }
         
-        ctx.fillStyle = '#ffffff';
+        const textDistance = radius + 20;
+        const textX = center.x + Math.cos(textAngle) * textDistance;
+        const textY = center.y + Math.sin(textAngle) * textDistance;
+        
+        // 根据标签类型设置不同的文字颜色
+        if (label === '瞄准角度') {
+            ctx.fillStyle = '#FFD700'; // 黄色
+        } else {
+            ctx.fillStyle = '#ffffff'; // 白色
+        }
         ctx.font = '12px Arial';
         ctx.textAlign = 'center';
-        const angleDiff = Math.abs(endAngle - startAngle);
         const angleText = this.radiansToDegrees(angleDiff).toFixed(1) + '°';
         
         // 如果有标签，显示标签和角度
@@ -727,37 +827,33 @@ class PoolTrainer {
         const pocket = this.getSelectedPocket();
         if (!cueBall || !targetBall || !pocket) return;
 
-        // 1. 计算目标球到袋口的单位向量
-        const dx_tp = pocket.x - targetBall.x;
-        const dy_tp = pocket.y - targetBall.y;
-        const dist_tp = Math.sqrt(dx_tp * dx_tp + dy_tp * dy_tp);
-        const dir_tp = {
-            x: dx_tp / dist_tp,
-            y: dy_tp / dist_tp
-        };
-
-        // 2. 计算假想球位置（在目标球后方2R处）
-        const imaginaryBall = {
-            x: targetBall.x + dir_tp.x * 2 * ballRadius,
-            y: targetBall.y + dir_tp.y * 2 * ballRadius
-        };
-
-        // 3. 计算白球到目标球的单位向量（视线方向）
-        const dx_wt = targetBall.x - cueBall.x;
-        const dy_wt = targetBall.y - cueBall.y;
-        const dist_wt = Math.sqrt(dx_wt * dx_wt + dy_wt * dy_wt);
-        const dir_wt = {
-            x: dx_wt / dist_wt,
-            y: dy_wt / dist_wt
-        };
-
-        // 4. 计算目标球到假想球的向量与视线方向的夹角
-        const angle = Math.acos(dir_tp.x * dir_wt.x + dir_tp.y * dir_wt.y);
+        // 1. 计算瞄准角度（假想球-白球连线与进球线的夹角）
+        const pocketLine = this.calculatePocketLine();
         
-        // 5. 计算d/R比例
-        // d = 2R * sin(angle)
-        // d/R = 2 * sin(angle)
-        const dist_ratio = 2 * Math.sin(angle);
+        // 计算假想球位置
+        const angle = pocketLine.angle;
+        const phantomBall = {
+            x: targetBall.x - Math.cos(angle) * (this.ballRadius * 2),
+            y: targetBall.y - Math.sin(angle) * (this.ballRadius * 2)
+        };
+        
+        // 计算假想球到白球的连线角度
+        const phantomToCueAngle = this.getAngle(phantomBall, cueBall);
+        
+        // 计算瞄准角度（假想球-白球连线与进球线的夹角）
+        const vec1 = { x: Math.cos(pocketLine.angle), y: Math.sin(pocketLine.angle) };
+        const vec2 = { x: Math.cos(phantomToCueAngle), y: Math.sin(phantomToCueAngle) };
+        const dotProduct = vec1.x * vec2.x + vec1.y * vec2.y;
+        
+        // 计算瞄准角度（锐角）
+        let aimAngle = Math.acos(Math.max(-1, Math.min(1, dotProduct)));
+        if (aimAngle > Math.PI / 2) {
+            aimAngle = Math.PI - aimAngle;
+        }
+        
+        // 2. 计算d/R比例
+        // d/R = 2 * sin(瞄准角度)
+        const dist_ratio = 2 * Math.sin(aimAngle);
 
         const centerX = viewWidth / 2;
         const centerY = viewHeight / 2;
@@ -840,9 +936,32 @@ class PoolTrainer {
                 const pocketLine = this.calculatePocketLine();
                 const cueLine = this.calculateCueLine();
                 if (pocketLine && cueLine) {
-                    const angleDiff = Math.abs(pocketLine.angle - cueLine.angle);
-                    const angleDegrees = this.radiansToDegrees(angleDiff);
-                    angleInfoElement.textContent = `目标: ${pocketName} | 击球角度: ${angleDegrees.toFixed(1)}° | 点击球袋可切换目标`;
+                    // 计算击球角度（白球-目标球连线与进球线的夹角）
+                    const vec1 = { x: Math.cos(pocketLine.angle), y: Math.sin(pocketLine.angle) };
+                    const vec2 = { x: Math.cos(cueLine.angle), y: Math.sin(cueLine.angle) };
+                    const dotProduct = vec1.x * vec2.x + vec1.y * vec2.y;
+                    let hitAngle = Math.acos(Math.max(-1, Math.min(1, dotProduct)));
+                    if (hitAngle > Math.PI / 2) {
+                        hitAngle = Math.PI - hitAngle;
+                    }
+                    const hitAngleDegrees = this.radiansToDegrees(hitAngle);
+                    
+                    // 计算瞄准角度（假想球-白球连线与进球线的夹角）
+                    const angle = pocketLine.angle;
+                    const phantomBall = {
+                        x: this.targetBall.x - Math.cos(angle) * (this.ballRadius * 2),
+                        y: this.targetBall.y - Math.sin(angle) * (this.ballRadius * 2)
+                    };
+                    const phantomToCueAngle = this.getAngle(phantomBall, this.cueBall);
+                    const vec3 = { x: Math.cos(phantomToCueAngle), y: Math.sin(phantomToCueAngle) };
+                    const dotProduct2 = vec1.x * vec3.x + vec1.y * vec3.y;
+                    let aimAngle = Math.acos(Math.max(-1, Math.min(1, dotProduct2)));
+                    if (aimAngle > Math.PI / 2) {
+                        aimAngle = Math.PI - aimAngle;
+                    }
+                    const aimAngleDegrees = this.radiansToDegrees(aimAngle);
+                    
+                    angleInfoElement.textContent = `目标: ${pocketName} | 击球角度: ${hitAngleDegrees.toFixed(1)}° | 瞄准角度: ${aimAngleDegrees.toFixed(1)}° | 点击球袋可切换目标`;
                 } else {
                     angleInfoElement.textContent = `目标: ${pocketName} | 点击球袋可切换目标`;
                 }
