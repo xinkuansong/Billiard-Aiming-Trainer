@@ -96,7 +96,7 @@ Read file: styles.css
 
 ---
 
-
+The model made no changes to the file.
 
 ---
 
@@ -104,7 +104,24 @@ Read file: styles.css
 
 ---
 
+<details><summary>Edit file: index.html</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -105,5 +105,5 @@
+                      <div class="angle-display-area">
+                          <div class="angle-display-container">
+-                             <canvas id="angleCanvas" width="480" height="360"></canvas>
++                             <canvas id="angleCanvas" width="800" height="600"></canvas>
+                              <div class="angle-controls">
+                                  <div class="angle-controls-row">
+```
+
+</details>
 
 ---
 
@@ -112,7 +129,24 @@ Read file: styles.css
 
 ---
 
+<details><summary>Edit file: index.html</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -191,5 +191,5 @@
+                      <div class="sine-curve-container">
+                          <h4>正弦曲线 (0°-90°)</h4>
+-                         <canvas id="sineCurve" width="400" height="250"></canvas>
++                         <canvas id="sineCurve" width="400" height="400"></canvas>
+                      </div>
+                  </div>
+```
+
+</details>
 
 ---
 
@@ -132,7 +166,7 @@ Read file: styles.css
 
 ---
 
-
+The model made no changes to the file.
 
 ---
 
@@ -140,7 +174,25 @@ Read file: styles.css
 
 ---
 
+<details><summary>Edit file: styles.css</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -475,5 +475,6 @@
+      display: flex;
+      gap: 20px;
+-     align-items: flex-start;
++     align-items: center;
++     justify-content: center;
+  }
+  
+```
+
+</details>
 
 ---
 
@@ -148,7 +200,7 @@ Read file: styles.css
 
 ---
 
-
+The model provided an ambiguous search string to replace.
 
 ---
 
@@ -164,7 +216,34 @@ Read file: styles.css
 
 ---
 
+<details><summary>Edit file: styles.css</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 3, lines removed: 9
+
+```diff
+@@ -481,13 +481,7 @@
+  .angle-display-area {
+      display: flex;
+-     gap: 15px;
+-     align-items: flex-start;
+-     flex: 1;
+- }
+- 
+- .angle-display-area {
+-     display: flex;
+-     gap: 15px;
+-     align-items: flex-start;
++     gap: 20px;
++     align-items: center;
++     justify-content: center;
+      flex: 1;
+  }
+```
+
+</details>
 
 ---
 
@@ -172,7 +251,26 @@ Read file: styles.css
 
 ---
 
+<details><summary>Edit file: styles.css</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 4, lines removed: undefined
+
+```diff
+@@ -497,4 +497,8 @@
+      min-width: 0; /* 防止flex子项溢出 */
+      text-align: center;
++     display: flex;
++     flex-direction: column;
++     justify-content: center;
++     align-items: center;
+  }
+  
+```
+
+</details>
 
 ---
 
@@ -184,7 +282,24 @@ Read file: styles.css
 
 ---
 
+<details><summary>Edit file: styles.css</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 2, lines removed: undefined
+
+```diff
+@@ -432,4 +432,6 @@
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
++     max-width: 100%;
++     height: auto;
+  }
+  
+```
+
+</details>
 
 ---
 
@@ -196,7 +311,26 @@ Read file: styles.css
 
 ---
 
+<details><summary>Edit file: styles.css</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 4, lines removed: undefined
+
+```diff
+@@ -522,4 +522,8 @@
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      text-align: center;
++     display: flex;
++     flex-direction: column;
++     justify-content: center;
++     align-items: center;
+  }
+  
+```
+
+</details>
 
 ---
 
@@ -204,7 +338,26 @@ Read file: styles.css
 
 ---
 
+<details><summary>Edit file: styles.css</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 4, lines removed: undefined
+
+```diff
+@@ -512,4 +512,8 @@
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
++     display: flex;
++     flex-direction: column;
++     justify-content: center;
++     align-items: center;
+  }
+  
+```
+
+</details>
 
 ---
 
@@ -217,8 +370,8 @@ Read file: styles.css
 ---
 
 <details>
-            <summary>Searched codebase "角度训练区域的绘制逻辑，angleCanvas绘制坐标轴" • **25** results</summary>
-        
+                <summary>Searched codebase "角度训练区域的绘制逻辑，angleCanvas绘制坐标轴" • **25** results</summary>
+            
 | File | Lines |
 |------|-------|
 | `script.js` | L976-1020 |
@@ -288,7 +441,178 @@ Read file: script.js
 
 ---
 
+<details><summary>Edit file: script.js</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 31, lines removed: 10
+
+```diff
+@@ -980,27 +980,48 @@
+          const width = this.angleCanvas.width;
+          const height = this.angleCanvas.height;
+-         const centerX = width / 2;
+-         const centerY = height / 2;
+-         const radius = Math.min(width, height) * 0.35;
++         const padding = 60;
++         const originX = padding;
++         const originY = height - padding;
++         const maxRadius = Math.min(width - 2 * padding, height - 2 * padding) * 0.8;
+  
+          // 清空画布
+          ctx.clearRect(0, 0, width, height);
+- 
+-         // 绘制外部背景（深紫色）
+-         document.getElementById('angleCanvas').style.backgroundColor = '#6B5B95';
+  
+          // 绘制练习区域（整个矩形区域为绿色）
+          ctx.fillStyle = '#0f5132';  // 与球桌相同的绿色
+          ctx.fillRect(0, 0, width, height);
++ 
++         // 绘制坐标轴
++         ctx.strokeStyle = '#ffffff';
++         ctx.lineWidth = 3;
++         
++         // X轴（0度方向）
++         ctx.beginPath();
++         ctx.moveTo(originX, originY);
++         ctx.lineTo(originX + maxRadius, originY);
++         ctx.stroke();
++         
++         // Y轴（90度方向）
++         ctx.beginPath();
++         ctx.moveTo(originX, originY);
++         ctx.lineTo(originX, originY - maxRadius);
++         ctx.stroke();
++ 
++         // 绘制坐标轴标签
++         ctx.fillStyle = '#ffffff';
++         ctx.font = '16px Arial';
++         ctx.textAlign = 'center';
++         ctx.fillText('0°', originX + maxRadius + 20, originY + 5);
++         ctx.fillText('90°', originX - 5, originY - maxRadius - 10);
+  
+          // 如果显示参考角度，绘制网格线和标签
+          if (this.showReferenceAngles) {
+              const gridAngles = [15, 30, 45, 60, 75];
+              gridAngles.forEach(angle => {
+-                 // 绘制从中心到边缘的径向线
++                 // 绘制从原点到边缘的径向线
+                  ctx.beginPath();
+-                 ctx.moveTo(centerX, centerY);
+-                 const endX = centerX + radius * Math.cos(this.degreesToRadians(angle));
+-                 const endY = centerY - radius * Math.sin(this.degreesToRadians(angle));
++                 ctx.moveTo(originX, originY);
++                 const endX = originX + maxRadius * Math.cos(this.degreesToRadians(angle));
++                 const endY = originY - maxRadius * Math.sin(this.degreesToRadians(angle));
+                  ctx.lineTo(endX, endY);
+                  ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)'; // 半透明白色网格线
+```
+
+**Chunk 2**
+Lines added: 7, lines removed: 7
+
+```diff
+@@ -1011,18 +1032,18 @@
+                  
+                  // 绘制角度标签
+-                 const labelRadius = radius + 20;
+-                 const labelX = centerX + labelRadius * Math.cos(this.degreesToRadians(angle));
+-                 const labelY = centerY - labelRadius * Math.sin(this.degreesToRadians(angle));
++                 const labelRadius = maxRadius + 25;
++                 const labelX = originX + labelRadius * Math.cos(this.degreesToRadians(angle));
++                 const labelY = originY - labelRadius * Math.sin(this.degreesToRadians(angle));
+                  ctx.fillStyle = '#90EE90'; // 浅绿色
+-                 ctx.font = '12px Arial';
++                 ctx.font = '14px Arial';
+                  ctx.textAlign = 'center';
+                  ctx.fillText(angle + '°', labelX, labelY);
+              });
+  
+-             // 绘制同心圆网格线
+-             const gridRadii = [radius * 0.3, radius * 0.6, radius * 0.9];
++             // 绘制同心圆弧（只绘制第一象限）
++             const gridRadii = [maxRadius * 0.3, maxRadius * 0.6, maxRadius * 0.9];
+              gridRadii.forEach(r => {
+                  ctx.beginPath();
+-                 ctx.arc(centerX, centerY, r, 0, 2 * Math.PI);
++                 ctx.arc(originX, originY, r, -Math.PI/2, 0);
+                  ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'; // 更淡的网格线
+                  ctx.lineWidth = 1;
+```
+
+**Chunk 3**
+Lines added: 27, lines removed: 25
+
+```diff
+@@ -1033,36 +1054,38 @@
+          }
+  
+-         // 绘制随机角度
+-         ctx.beginPath();
+-         ctx.moveTo(centerX, centerY);
+-         const endX = centerX + radius * Math.cos(this.degreesToRadians(this.randomAngle));
+-         const endY = centerY - radius * Math.sin(this.degreesToRadians(this.randomAngle));
+-         ctx.lineTo(endX, endY);
+-         ctx.strokeStyle = '#ffffff'; // 白色
+-         ctx.lineWidth = 2;
+-         ctx.stroke();
+- 
+-         // 绘制水平线
+-         ctx.beginPath();
+-         ctx.moveTo(centerX - radius, centerY);
+-         ctx.lineTo(centerX + radius, centerY);
+-         ctx.strokeStyle = '#ffffff'; // 白色
+-         ctx.lineWidth = 1;
+-         ctx.stroke();
++         // 绘制随机角度线
++         if (this.randomAngle > 0) {
++             ctx.beginPath();
++             ctx.moveTo(originX, originY);
++             const endX = originX + maxRadius * Math.cos(this.degreesToRadians(this.randomAngle));
++             const endY = originY - maxRadius * Math.sin(this.degreesToRadians(this.randomAngle));
++             ctx.lineTo(endX, endY);
++             ctx.strokeStyle = '#ffffff'; // 白色
++             ctx.lineWidth = 4;
++             ctx.stroke();
+  
+-         // 绘制角度扇形
+-         ctx.beginPath();
+-         ctx.moveTo(centerX, centerY);
+-         ctx.arc(centerX, centerY, radius * 0.2, 0, this.degreesToRadians(this.randomAngle), true);
+-         ctx.lineTo(centerX, centerY);
+-         ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'; // 半透明白色
++             // 绘制角度扇形
++             ctx.beginPath();
++             ctx.moveTo(originX, originY);
++             ctx.arc(originX, originY, maxRadius * 0.15, 0, -this.degreesToRadians(this.randomAngle), true);
++             ctx.lineTo(originX, originY);
++             ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'; // 半透明白色
++             ctx.fill();
++         }
++ 
++         // 绘制原点
++         ctx.fillStyle = '#ffffff';
++         ctx.beginPath();
++         ctx.arc(originX, originY, 5, 0, 2 * Math.PI);
+          ctx.fill();
+  
+          // 如果需要显示角度值
+-         if (this.showAngleValue) {
++         if (this.showAngleValue && this.randomAngle > 0) {
+              ctx.fillStyle = '#ffffff'; // 白色
+              ctx.font = 'bold 24px Arial';
+              ctx.textAlign = 'center';
+-             ctx.fillText(Math.round(this.randomAngle) + '°', centerX, centerY - radius - 20);
++             const textX = originX + maxRadius * 0.3 * Math.cos(this.degreesToRadians(this.randomAngle / 2));
++             const textY = originY - maxRadius * 0.3 * Math.sin(this.degreesToRadians(this.randomAngle / 2));
++             ctx.fillText(Math.round(this.randomAngle) + '°', textX, textY);
+          }
+      }
+```
+
+</details>
 
 ---
 
@@ -419,7 +743,50 @@ pkill -f "python3 start_server.py"
 
 ---
 
+<details><summary>Edit file: script.js</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -1124,5 +1124,5 @@
+          // 绘制网格线和标签
+          const angles = [0, 15, 30, 45, 60, 75, 90];
+-         const sineValues = [0, 0.25, 0.5, 0.75, 1];
++         const sineValues = [0, 0.5, 1, 1.5, 2];
+          
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+```
+
+**Chunk 2**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -1147,5 +1147,5 @@
+          // 水平网格线（正弦值）
+          sineValues.forEach(value => {
+-             const y = height - padding - value * chartHeight;
++             const y = height - padding - (value / 2) * chartHeight;
+              ctx.beginPath();
+              ctx.moveTo(padding, y);
+```
+
+**Chunk 3**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -1157,5 +1157,5 @@
+              ctx.font = '10px Arial';
+              ctx.textAlign = 'right';
+-             ctx.fillText(value.toFixed(2), padding - 5, y + 3);
++             ctx.fillText(value.toFixed(1), padding - 5, y + 3);
+          });
+          
+```
+
+</details>
 
 ---
 
@@ -427,7 +794,26 @@ pkill -f "python3 start_server.py"
 
 ---
 
+<details><summary>Edit file: script.js</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 2, lines removed: 2
+
+```diff
+@@ -1169,6 +1169,6 @@
+          for (let angle = 0; angle <= 90; angle += 0.5) {
+              const x = padding + (angle / 90) * chartWidth;
+-             const sineValue = Math.sin(this.degreesToRadians(angle));
+-             const y = height - padding - sineValue * chartHeight;
++             const sineValue = Math.sin(this.degreesToRadians(angle)) * 2;
++             const y = height - padding - (sineValue / 2) * chartHeight;
+              
+              if (angle === 0) {
+```
+
+</details>
 
 ---
 
@@ -435,7 +821,26 @@ pkill -f "python3 start_server.py"
 
 ---
 
+<details><summary>Edit file: script.js</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 2, lines removed: 2
+
+```diff
+@@ -1184,6 +1184,6 @@
+          specialAngles.forEach(angle => {
+              const x = padding + (angle / 90) * chartWidth;
+-             const sineValue = Math.sin(this.degreesToRadians(angle));
+-             const y = height - padding - sineValue * chartHeight;
++             const sineValue = Math.sin(this.degreesToRadians(angle)) * 2;
++             const y = height - padding - (sineValue / 2) * chartHeight;
+              
+              ctx.fillStyle = '#ff6b6b';
+```
+
+</details>
 
 ---
 
@@ -443,7 +848,24 @@ pkill -f "python3 start_server.py"
 
 ---
 
+<details><summary>Edit file: script.js</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -1208,5 +1208,5 @@
+          ctx.translate(15, height / 2);
+          ctx.rotate(-Math.PI / 2);
+-         ctx.fillText('sin(角度)', 0, 0);
++         ctx.fillText('2×sin(角度)', 0, 0);
+          ctx.restore();
+      }
+```
+
+</details>
 
 ---
 
@@ -457,7 +879,46 @@ pkill -f "python3 start_server.py"
 
 ---
 
+<details><summary>Edit file: index.html</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 12, lines removed: 12
+
+```diff
+@@ -172,16 +172,16 @@
+                                  <tr><td>25</td><td>0.84</td><td>22.1</td><td>24.0</td></tr>
+                                  <tr><td>30</td><td>1.00</td><td>26.3</td><td>28.6</td></tr>
+-                                 <tr><td>35</td><td>1.15</td><td>30.2</td><td>32.9</td></tr>
+-                                 <tr><td>40</td><td>1.29</td><td>33.9</td><td>36.9</td></tr>
+-                                 <tr><td>45</td><td>1.41</td><td>37.1</td><td>40.3</td></tr>
+-                                 <tr><td>50</td><td>1.53</td><td>40.2</td><td>43.7</td></tr>
+-                                 <tr><td>55</td><td>1.64</td><td>43.1</td><td>46.9</td></tr>
+-                                 <tr><td>60</td><td>1.73</td><td>45.4</td><td>49.4</td></tr>
+-                                 <tr><td>65</td><td>1.81</td><td>47.5</td><td>51.7</td></tr>
+-                                 <tr><td>70</td><td>1.88</td><td>49.4</td><td>53.7</td></tr>
+-                                 <tr><td>75</td><td>1.93</td><td>50.7</td><td>55.2</td></tr>
+-                                 <tr><td>80</td><td>1.97</td><td>51.7</td><td>56.3</td></tr>
+-                                 <tr><td>85</td><td>1.99</td><td>52.2</td><td>56.9</td></tr>
+-                                 <tr><td>90</td><td>2.00</td><td>52.5</td><td>57.2</td></tr>
++                                 <tr><td>35</td><td>1.15</td><td>30.2 (3.95)</td><td>32.9 (4.33)</td></tr>
++                                 <tr><td>40</td><td>1.29</td><td>33.9 (7.65)</td><td>36.9 (8.33)</td></tr>
++                                 <tr><td>45</td><td>1.41</td><td>37.1 (10.85)</td><td>40.3 (11.73)</td></tr>
++                                 <tr><td>50</td><td>1.53</td><td>40.2 (13.95)</td><td>43.7 (15.13)</td></tr>
++                                 <tr><td>55</td><td>1.64</td><td>43.1 (16.85)</td><td>46.9 (18.33)</td></tr>
++                                 <tr><td>60</td><td>1.73</td><td>45.4 (19.15)</td><td>49.4 (20.83)</td></tr>
++                                 <tr><td>65</td><td>1.81</td><td>47.5 (21.25)</td><td>51.7 (22.13)</td></tr>
++                                 <tr><td>70</td><td>1.88</td><td>49.4 (23.15)</td><td>53.7 (24.13)</td></tr>
++                                 <tr><td>75</td><td>1.93</td><td>50.7 (24.45)</td><td>55.2 (25.63)</td></tr>
++                                 <tr><td>80</td><td>1.97</td><td>51.7 (25.45)</td><td>56.3 (26.73)</td></tr>
++                                 <tr><td>85</td><td>1.99</td><td>52.2 (25.95)</td><td>56.9 (27.33)</td></tr>
++                                 <tr><td>90</td><td>2.00</td><td>52.5 (26.25)</td><td>57.2 (28.63)</td></tr>
+                              </tbody>
+                          </table>
+```
+
+</details>
 
 ---
 
@@ -549,7 +1010,51 @@ _**Assistant**_
 
 ---
 
+<details><summary>Edit file: script.js</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 4, lines removed: 4
+
+```diff
+@@ -996,14 +996,14 @@
+          ctx.lineWidth = 3;
+          
+-         // X轴（0度方向）
++         // X轴（0度方向）- 延长到边缘
+          ctx.beginPath();
+          ctx.moveTo(originX, originY);
+-         ctx.lineTo(originX + maxRadius, originY);
++         ctx.lineTo(width - padding / 2, originY);
+          ctx.stroke();
+          
+-         // Y轴（90度方向）
++         // Y轴（90度方向）- 延长到边缘
+          ctx.beginPath();
+          ctx.moveTo(originX, originY);
+-         ctx.lineTo(originX, originY - maxRadius);
++         ctx.lineTo(originX, padding / 2);
+          ctx.stroke();
+  
+```
+
+**Chunk 2**
+Lines added: 2, lines removed: 2
+
+```diff
+@@ -1012,6 +1012,6 @@
+          ctx.font = '16px Arial';
+          ctx.textAlign = 'center';
+-         ctx.fillText('0°', originX + maxRadius + 20, originY + 5);
+-         ctx.fillText('90°', originX - 5, originY - maxRadius - 10);
++         ctx.fillText('0°', width - padding / 2 + 20, originY + 5);
++         ctx.fillText('90°', originX - 5, padding / 2 - 10);
+  
+          // 如果显示参考角度，绘制网格线和标签
+```
+
+</details>
 
 ---
 
@@ -565,7 +1070,24 @@ _**Assistant**_
 
 ---
 
+<details><summary>Edit file: styles.css</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -477,5 +477,5 @@
+      display: flex;
+      gap: 20px;
+-     align-items: center;
++     align-items: flex-start;
+      justify-content: center;
+  }
+```
+
+</details>
 
 ---
 
@@ -573,7 +1095,24 @@ _**Assistant**_
 
 ---
 
+<details><summary>Edit file: styles.css</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -501,5 +501,5 @@
+      display: flex;
+      flex-direction: column;
+-     justify-content: center;
++     justify-content: flex-start;
+      align-items: center;
+  }
+```
+
+</details>
 
 ---
 
@@ -603,7 +1142,25 @@ Read file: styles.css
 
 ---
 
+<details><summary>Edit file: styles.css</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -388,6 +388,6 @@
+      border-radius: 15px;
+      padding: 20px;
+-     margin-top: 20px;
+      border: 1px solid #4b5563;
++     align-self: flex-start;
+  }
+  
+```
+
+</details>
 
 ---
 
@@ -611,7 +1168,24 @@ Read file: styles.css
 
 ---
 
+<details><summary>Edit file: styles.css</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -484,5 +484,5 @@
+      display: flex;
+      gap: 20px;
+-     align-items: center;
++     align-items: flex-start;
+      justify-content: center;
+      flex: 1;
+```
+
+</details>
 
 ---
 
@@ -729,7 +1303,27 @@ if (this.randomAngle > 0) {
 
 ---
 
+<details><summary>Edit file: script.js</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 3, lines removed: 2
+
+```diff
+@@ -1058,6 +1058,7 @@
+              ctx.beginPath();
+              ctx.moveTo(originX, originY);
+-             const endX = originX + maxRadius * Math.cos(this.degreesToRadians(this.randomAngle));
+-             const endY = originY - maxRadius * Math.sin(this.degreesToRadians(this.randomAngle));
++             const angleLineLength = maxRadius * 1.3; // 角度线长度增加30%
++             const endX = originX + angleLineLength * Math.cos(this.degreesToRadians(this.randomAngle));
++             const endY = originY - angleLineLength * Math.sin(this.degreesToRadians(this.randomAngle));
+              ctx.lineTo(endX, endY);
+              ctx.strokeStyle = '#ffffff'; // 白色
+```
+
+</details>
 
 ---
 
@@ -791,7 +1385,40 @@ _**Assistant**_
 
 ---
 
+<details><summary>Edit file: script.js</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 3, lines removed: 2
+
+```diff
+@@ -1022,6 +1022,7 @@
+                  ctx.beginPath();
+                  ctx.moveTo(originX, originY);
+-                 const endX = originX + maxRadius * Math.cos(this.degreesToRadians(angle));
+-                 const endY = originY - maxRadius * Math.sin(this.degreesToRadians(angle));
++                 const referenceLineLength = maxRadius * 1.3; // 参考角度线长度增加30%
++                 const endX = originX + referenceLineLength * Math.cos(this.degreesToRadians(angle));
++                 const endY = originY - referenceLineLength * Math.sin(this.degreesToRadians(angle));
+                  ctx.lineTo(endX, endY);
+                  ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)'; // 半透明白色网格线
+```
+
+**Chunk 2**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -1032,5 +1033,5 @@
+                  
+                  // 绘制角度标签
+-                 const labelRadius = maxRadius + 25;
++                 const labelRadius = referenceLineLength + 25;
+                  const labelX = originX + labelRadius * Math.cos(this.degreesToRadians(angle));
+                  const labelY = originY - labelRadius * Math.sin(this.degreesToRadians(angle));
+```
+
+</details>
 
 ---
 
@@ -866,7 +1493,15 @@ Read file: README.md
 
 ---
 
+<details><summary>Edit file: README.md</summary>
+
+重写README文件，提供详细的项目介绍、功能特性、使用方法等信息
+
+**Chunk 1**
+Lines added: 171, lines removed: 1
+
 ```diff
+@@ -1,2 +1,172 @@
 - # ball_practice
 + # 台球瞄准训练器 🎱
 + 
@@ -1042,6 +1677,8 @@ Read file: README.md
   
 ```
 
+</details>
+
 ---
 
 <think><details><summary>Thought Process</summary>我已经成功重写了README文件，现在它包含了详细的项目介绍、功能特性、使用方法、技术栈等信息。这个新的README文件包含了：
@@ -1137,7 +1774,55 @@ Read file: styles.css
 
 ---
 
+<details><summary>Edit file: styles.css</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 4, lines removed: undefined
+
+```diff
+@@ -720,4 +720,8 @@
+          padding: 15px;
+          margin-top: 15px;
++         width: 100%;
++         max-width: 100%;
++         min-width: 0;
++         box-sizing: border-box;
+      }
+  
+```
+
+**Chunk 2**
+Lines added: 9, lines removed: undefined
+
+```diff
+@@ -726,13 +730,22 @@
+          gap: 8px;
+          align-items: stretch;
++         width: 100%;
+      }
+  
+      .angle-generator-input .angle-input {
+          width: 100%;
++         max-width: 100%;
++         box-sizing: border-box;
+      }
+  
+      .angle-generator-input .stats-grid {
+          grid-template-columns: 1fr;
+          gap: 8px;
++         width: 100%;
++     }
++ 
++     .angle-generator-input .training-stats {
++         width: 100%;
++         max-width: 100%;
+      }
+  
+```
+
+</details>
 
 ---
 
@@ -1149,7 +1834,7 @@ Read file: styles.css
 
 ---
 
-
+The model provided an ambiguous search string to replace.
 
 ---
 
@@ -1189,7 +1874,7 @@ Read file: styles.css
 
 ---
 
-
+The model provided an ambiguous search string to replace.
 
 ---
 
@@ -1201,7 +1886,42 @@ Read file: styles.css
 
 ---
 
+<details><summary>Edit file: styles.css</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 12, lines removed: undefined
+
+```diff
+@@ -609,12 +609,24 @@
+      .angle-practice-top {
+          flex-direction: column;
++         width: 100%;
++         align-items: stretch;
+      }
+      
+      .angle-practice-bottom {
+          flex-direction: column;
++         width: 100%;
+      }
+  
+      .angle-display-area {
+          flex-direction: column;
++         width: 100%;
++         align-items: stretch;
++         gap: 15px;
++     }
++ 
++     .angle-display-container {
++         width: 100%;
++         max-width: 100%;
++         align-items: center;
+      }
+  
+```
+
+</details>
 
 ---
 
@@ -1213,7 +1933,42 @@ Read file: styles.css
 
 ---
 
+<details><summary>Edit file: styles.css</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 12, lines removed: undefined
+
+```diff
+@@ -764,12 +764,24 @@
+      .angle-practice-top {
+          flex-direction: column;
++         width: 100%;
++         align-items: stretch;
+      }
+      
+      .angle-practice-bottom {
+          flex-direction: column;
++         width: 100%;
+      }
+  
+      .angle-display-area {
+          flex-direction: column;
++         width: 100%;
++         align-items: stretch;
++         gap: 15px;
++     }
++ 
++     .angle-display-container {
++         width: 100%;
++         max-width: 100%;
++         align-items: center;
+      }
+  
+```
+
+</details>
 
 ---
 
@@ -1225,7 +1980,30 @@ Read file: styles.css
 
 ---
 
+<details><summary>Edit file: styles.css</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 8, lines removed: undefined
+
+```diff
+@@ -722,4 +722,12 @@
+          padding: 20px;
+          margin-top: 20px;
++         width: 100%;
++         max-width: 100%;
++         box-sizing: border-box;
++     }
++ 
++     .angle-practice-container {
++         width: 100%;
++         max-width: 100%;
+      }
+  
+```
+
+</details>
 
 ---
 
@@ -1397,7 +2175,24 @@ Read file: styles.css
 
 ---
 
+<details><summary>Edit file: styles.css</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 2, lines removed: undefined
+
+```diff
+@@ -744,4 +744,6 @@
+          min-width: 0;
+          box-sizing: border-box;
++         align-self: stretch !important;
++         flex: 1;
+      }
+  
+```
+
+</details>
 
 ---
 
@@ -1411,7 +2206,46 @@ Read file: styles.css
 
 ---
 
+<details><summary>Edit file: styles.css</summary>
 
+undefined
+
+**Chunk 1**
+Lines added: 24, lines removed: undefined
+
+```diff
+@@ -861,4 +861,28 @@
+          font-size: 16px;
+      }
++ 
++     /* 角度预测区域移动端修复 */
++     .angle-generator-input {
++         align-self: stretch !important;
++         width: 100% !important;
++         max-width: 100% !important;
++         flex: 1 !important;
++         margin: 10px 0 !important;
++         padding: 10px !important;
++     }
++ 
++     .angle-generator-input .angle-input-group {
++         width: 100% !important;
++         flex-direction: column !important;
++     }
++ 
++     .angle-generator-input .angle-input {
++         width: 100% !important;
++         margin: 5px 0 !important;
++     }
++ 
++     .angle-generator-input .training-stats {
++         width: 100% !important;
++     }
+  }
+  
+```
+
+</details>
 
 ---
 
