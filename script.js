@@ -1049,17 +1049,37 @@ class PoolTrainer {
             this.updateStats();
         }
         
-        // 计算实际角度
+        // 计算实际瞄准角度
         const pocketLine = this.calculatePocketLine();
-        const cueLine = this.calculateCueLine();
         
-        if (!pocketLine || !cueLine) {
+        if (!pocketLine) {
             resultElement.textContent = '无法计算角度，请重新生成球位';
             resultElement.className = 'angle-result incorrect';
             return;
         }
         
-        const actualAngle = Math.abs(this.radiansToDegrees(pocketLine.angle - cueLine.angle));
+        // 计算假想球位置
+        const angle = pocketLine.angle;
+        const phantomBall = {
+            x: this.targetBall.x - Math.cos(angle) * (this.ballRadius * 2),
+            y: this.targetBall.y - Math.sin(angle) * (this.ballRadius * 2)
+        };
+        
+        // 计算假想球到白球的连线角度
+        const phantomToCueAngle = this.getAngle(phantomBall, this.cueBall);
+        
+        // 计算瞄准角度（假想球-白球连线与进球线的夹角）
+        const vec1 = { x: Math.cos(pocketLine.angle), y: Math.sin(pocketLine.angle) };
+        const vec2 = { x: Math.cos(phantomToCueAngle), y: Math.sin(phantomToCueAngle) };
+        const dotProduct = vec1.x * vec2.x + vec1.y * vec2.y;
+        let actualAngleRad = Math.acos(Math.max(-1, Math.min(1, dotProduct)));
+        
+        // 确保是锐角
+        if (actualAngleRad > Math.PI / 2) {
+            actualAngleRad = Math.PI - actualAngleRad;
+        }
+        
+        const actualAngle = this.radiansToDegrees(actualAngleRad);
         const error = Math.abs(actualAngle - predictedAngle);
         
         // 更新统计
