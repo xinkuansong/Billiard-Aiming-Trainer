@@ -474,15 +474,52 @@ class PoolTrainer {
         ctx.arc(phantomBall.x, phantomBall.y, this.ballRadius, 0, 2 * Math.PI);
         ctx.stroke();
         
-        // 绘制连接假想球和白球中心的虚线
+        // 绘制连接假想球和白球中心的虚线（延长线）
         ctx.beginPath();
         ctx.setLineDash([3, 3]);  // 使用更短的虚线间隔
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
         ctx.lineWidth = 1;
-        ctx.moveTo(phantomBall.x, phantomBall.y);
-        ctx.lineTo(this.cueBall.x, this.cueBall.y);
+        
+        // 计算白球到假想球的方向向量
+        const phantomToCueAngle = this.getAngle(phantomBall, this.cueBall);
+        
+        // 白球到假想球连线的延长线（向白球方向延长）
+        const cueExtendedStart = {
+            x: phantomBall.x - Math.cos(phantomToCueAngle) * extensionFactor * 100,
+            y: phantomBall.y - Math.sin(phantomToCueAngle) * extensionFactor * 100
+        };
+        
+        // 白球到假想球连线的延长线（向假想球方向延长）
+        const cueExtendedEnd = {
+            x: this.cueBall.x + Math.cos(phantomToCueAngle) * extensionFactor * 100,
+            y: this.cueBall.y + Math.sin(phantomToCueAngle) * extensionFactor * 100
+        };
+        
+        ctx.moveTo(cueExtendedStart.x, cueExtendedStart.y);
+        ctx.lineTo(cueExtendedEnd.x, cueExtendedEnd.y);
         ctx.stroke();
-        ctx.setLineDash([5, 5]);  // 恢复原来的虚线间隔
+        
+        // 绘制过目标球中心垂直于白球-假想球连线的虚线
+        const perpendicularAngle = phantomToCueAngle + Math.PI / 2; // 垂直角度
+        const perpendicularLength = 60; // 垂直线的半长度
+        
+        const perpendicularStart = {
+            x: this.targetBall.x - Math.cos(perpendicularAngle) * perpendicularLength,
+            y: this.targetBall.y - Math.sin(perpendicularAngle) * perpendicularLength
+        };
+        
+        const perpendicularEnd = {
+            x: this.targetBall.x + Math.cos(perpendicularAngle) * perpendicularLength,
+            y: this.targetBall.y + Math.sin(perpendicularAngle) * perpendicularLength
+        };
+        
+        ctx.beginPath();
+        ctx.setLineDash([4, 4]); // 使用虚线
+        ctx.strokeStyle = 'rgba(255, 255, 0, 0.7)'; // 黄色虚线
+        ctx.lineWidth = 2;
+        ctx.moveTo(perpendicularStart.x, perpendicularStart.y);
+        ctx.lineTo(perpendicularEnd.x, perpendicularEnd.y);
+        ctx.stroke();
         
         // 绘制白球到目标球的虚线（延长线）
         ctx.beginPath();
@@ -491,19 +528,19 @@ class PoolTrainer {
         ctx.lineWidth = 1;
         
         // 计算延长线的终点
-        const cueExtendedEnd = {
+        const cueToTargetExtendedEnd = {
             x: this.targetBall.x + (this.targetBall.x - this.cueBall.x) * extensionFactor,
             y: this.targetBall.y + (this.targetBall.y - this.cueBall.y) * extensionFactor
         };
         
         // 计算延长线的起点（向后延伸）
-        const cueExtendedStart = {
+        const cueToTargetExtendedStart = {
             x: this.cueBall.x - (this.targetBall.x - this.cueBall.x) * extensionFactor,
             y: this.cueBall.y - (this.targetBall.y - this.cueBall.y) * extensionFactor
         };
         
-        ctx.moveTo(cueExtendedStart.x, cueExtendedStart.y);
-        ctx.lineTo(cueExtendedEnd.x, cueExtendedEnd.y);
+        ctx.moveTo(cueToTargetExtendedStart.x, cueToTargetExtendedStart.y);
+        ctx.lineTo(cueToTargetExtendedEnd.x, cueToTargetExtendedEnd.y);
         ctx.stroke();
         
         // 重置虚线设置
@@ -523,8 +560,21 @@ class PoolTrainer {
         
         if (!pocketLine || !cueLine) return;
         
-        // 绘制角度指示器（在目标球位置）
-        this.drawAngleIndicator(this.targetBall, pocketLine.angle, cueLine.angle);
+        // 计算假想球位置
+        const angle = pocketLine.angle;
+        const phantomBall = {
+            x: this.targetBall.x - Math.cos(angle) * (this.ballRadius * 2),
+            y: this.targetBall.y - Math.sin(angle) * (this.ballRadius * 2)
+        };
+        
+        // 计算白球到假想球的连线角度
+        const phantomToCueAngle = this.getAngle(phantomBall, this.cueBall);
+        
+        // 在目标球位置绘制角度指示器（白球-目标球连线与进球线的角度）
+        this.drawAngleIndicator(this.targetBall, pocketLine.angle, cueLine.angle, '击球角度');
+        
+        // 在假想球位置绘制角度指示器（白球-假想球连线与进球线的角度）
+        this.drawAngleIndicator(phantomBall, pocketLine.angle, phantomToCueAngle, '瞄准角度');
     }
     
     calculatePocketLine() {
@@ -548,7 +598,7 @@ class PoolTrainer {
         };
     }
     
-    drawAngleIndicator(center, angle1, angle2) {
+    drawAngleIndicator(center, angle1, angle2, label = '') {
         const ctx = this.tableCtx;
         const radius = 30;
         
@@ -569,16 +619,31 @@ class PoolTrainer {
         ctx.closePath();
         ctx.fill();
         
+        // 绘制角度扇形边框
+        ctx.strokeStyle = 'rgba(255, 255, 0, 0.8)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(center.x, center.y, radius, startAngle, endAngle);
+        ctx.stroke();
+        
         // 绘制角度文本
         const midAngle = (startAngle + endAngle) / 2;
         const textX = center.x + Math.cos(midAngle) * (radius + 15);
         const textY = center.y + Math.sin(midAngle) * (radius + 15);
         
         ctx.fillStyle = '#ffffff';
-        ctx.font = '14px Arial';
+        ctx.font = '12px Arial';
         ctx.textAlign = 'center';
         const angleDiff = Math.abs(endAngle - startAngle);
-        ctx.fillText(this.radiansToDegrees(angleDiff).toFixed(1) + '°', textX, textY);
+        const angleText = this.radiansToDegrees(angleDiff).toFixed(1) + '°';
+        
+        // 如果有标签，显示标签和角度
+        if (label) {
+            ctx.fillText(label, textX, textY - 8);
+            ctx.fillText(angleText, textX, textY + 8);
+        } else {
+            ctx.fillText(angleText, textX, textY);
+        }
     }
     
     drawAngleInfo(ctx) {
